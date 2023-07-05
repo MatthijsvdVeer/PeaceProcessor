@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace PeaceProcessor.Functions
 {
-    public class GenerateNarrationFunction
+    internal sealed class GenerateNarrationFunction
     {
         private readonly ILogger logger;
 
@@ -16,8 +16,8 @@ namespace PeaceProcessor.Functions
         public GenerateNarrationFunction(IOptions<SpeechConfiguration> config, ILoggerFactory loggerFactory)
         {
             this.logger = loggerFactory.CreateLogger<GenerateNarrationFunction>();
-            this.key = config.Value.Key;
-            this.region = config.Value.Region;
+            this.key = config.Value.Key!;
+            this.region = config.Value.Region!;
 
         }
 
@@ -25,7 +25,7 @@ namespace PeaceProcessor.Functions
         [BlobOutput("meditation/narration/{name}.wav", Connection = "blob-connection")]
         public async Task<byte[]> Run([BlobTrigger("meditation/scripts/{name}.xml", Connection = "blob-connection")] string myBlob, string name)
         {
-            this.logger.LogInformation("{0} triggered for blob: {1}", nameof(GenerateNarrationFunction), name);
+            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(GenerateNarrationFunction), name);
 
             var speechConfig = SpeechConfig.FromSubscription(this.key, this.region);
             using var speechSynthesizer = new SpeechSynthesizer(speechConfig);
@@ -39,7 +39,7 @@ namespace PeaceProcessor.Functions
             }
 
             var audioData = result.AudioData;
-            this.logger.LogInformation("Returning blob data. {0} bytes.", audioData.Length);
+            this.logger.LogInformation("Returning blob data. {bytes} bytes.", audioData.Length);
             return audioData;
         }
     }
