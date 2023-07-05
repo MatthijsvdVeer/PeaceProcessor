@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 
 namespace PeaceProcessor.Functions
 {
+    using NAudio.Wave;
+
     internal sealed class GenerateNarrationFunction
     {
         private readonly ILogger logger;
@@ -28,7 +30,8 @@ namespace PeaceProcessor.Functions
             this.logger.LogInformation("{function} triggered for blob: {name}", nameof(GenerateNarrationFunction), name);
 
             var speechConfig = SpeechConfig.FromSubscription(this.key, this.region);
-            using var speechSynthesizer = new SpeechSynthesizer(speechConfig);
+
+            using var speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
             var result = await speechSynthesizer.SpeakSsmlAsync(myBlob);
 
             if (result.Reason == ResultReason.Canceled)
@@ -38,9 +41,27 @@ namespace PeaceProcessor.Functions
                 throw new InvalidOperationException(cancellation.ErrorDetails);
             }
 
-            var audioData = result.AudioData;
-            this.logger.LogInformation("Returning blob data. {bytes} bytes.", audioData.Length);
-            return audioData;
+
+            // Convert to stereo.
+            //using var stream = AudioDataStream.FromResult(result);
+
+            await using var waveFileReader = new WaveFileReader(new MemoryStream(result.AudioData));
+
+
+            //await using var waveFileReader = new WaveFileReader(stream);
+            var stereo = new MonoToStereoProvider16(waveFileReader);
+            var outputStream = new MemoryStream();
+            WaveFileWriter.WriteWavFileToStream(outputStream, stereo);
+            return outputStream.ToArray();
+        }
+
+        public static byte[] ReadFully(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
         }
     }
 }
