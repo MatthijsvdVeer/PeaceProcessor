@@ -32,7 +32,6 @@ namespace PeaceProcessor.Functions
             // Read the narration and convert to stereo.
             var stream = new MemoryStream(myBlob);
             await using var waveFileReader = new WaveFileReader(stream);
-            var stereo = new MonoToStereoProvider16(waveFileReader);
 
             // Read the background music as an MP3.
             var stream2 = new MemoryStream(music);
@@ -49,7 +48,7 @@ namespace PeaceProcessor.Functions
             
             // Mix the two audio streams together.
             var mixer = new MixingSampleProvider(new[]
-                {stereo.ToSampleProvider(), reader2.ToSampleProvider()});
+                {waveFileReader.ToSampleProvider(), reader2.ToSampleProvider()});
             var sampleProvider = mixer.Take(waveFileReader.TotalTime.Add(TimeSpan.FromSeconds(10)));
             WaveFileWriter.CreateWaveFile16("mixed.wav", sampleProvider);
 
