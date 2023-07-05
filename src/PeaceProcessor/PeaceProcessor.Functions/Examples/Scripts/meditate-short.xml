@@ -1,0 +1,9 @@
+<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
+  <voice name='en-US-JennyNeural'>
+    <mstts:express-as style="hopeful">
+      <p>
+        <s>As we come to the end of this meditation, take one last deep breath, inhaling deeply and exhaling slowly. Gently wiggle your fingers and toes. When you’re ready, open your eyes. Thank you for your presence during this session.</s>
+      </p>
+    </mstts:express-as>
+  </voice>
+</speak>

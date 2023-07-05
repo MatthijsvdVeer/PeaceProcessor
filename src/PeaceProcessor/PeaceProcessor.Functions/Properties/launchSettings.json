@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PeaceProcessor.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7053",
+      "launchBrowser": false
+    }
+  }
+}
