@@ -1,0 +1,25 @@
+<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
+  <voice name='en-GB-SoniaNeural'>
+    <mstts:express-as style="hopeful">
+      <p>
+        <s>Welcome to this meditation session. Please find a comfortable position. This could be seated on a chair, on a cushion, or perhaps lying down. Close your eyes. Now, consciously relax your body, letting go of any tension you might be holding in your muscles.</s>
+        <break time="10s"/>
+        <s>Set the intention for this practice. The goal is not to change anything, but rather to stay present, to stay alert, and to be kind to yourself, whatever happens during this session.</s>
+        <break time="10s"/>
+        <s>Now, gently shift your focus to your breath. Feel the sensation of the breath as it enters your nostrils, fills your lungs, and then leaves your body. Try not to control your breath in any way. Just notice it. To help you focus, you may wish to count silently: Inhaling...1... Exhaling...2...</s>
+        <break time="10s"/>
+        <s>Gradually start moving your attention through the different parts of your body, observing any sensations, tension, or relaxation. Begin with your toes, then your feet. Move your attention up to your legs, your hips, your stomach area, your chest, your arms, your hands, and your fingers. Then onto your neck, your face, and the top of your head. Observe the feelings in each part of your body without judgement.</s>
+        <break time="10s"/>
+        <s>Once you've finished scanning your body, gently return your focus back to your breath. Notice its natural rhythm.</s>
+        <break time="10s"/>
+        <s>Now, let's observe our thoughts. Picture them as leaves floating on the surface of a stream, coming into your field of view and then drifting away. No need to change or get rid of these thoughts. Simply observe them as they flow.</s>
+        <break time="10s"/>
+        <s>Check in with your emotions. What are you feeling at this moment? Like your thoughts, simply observe. Don’t judge or attempt to change what you’re feeling. Just acknowledge it.</s>
+        <break time="10s"/>
+        <s>Shift your attention back to your body and the physical sensations you can feel. Maybe you notice the chair beneath you or the floor underneath you. Notice the weight of your body and the texture of your clothes against your skin. Notice any sounds that you can hear.</s>
+        <break time="10s"/>
+        <s>As we come to the end of this meditation, take one last deep breath, inhaling deeply and exhaling slowly. Gently wiggle your fingers and toes. When you’re ready, open your eyes. Thank you for your presence during this session.</s>
+      </p>
+    </mstts:express-as>
+  </voice>
+</speak>

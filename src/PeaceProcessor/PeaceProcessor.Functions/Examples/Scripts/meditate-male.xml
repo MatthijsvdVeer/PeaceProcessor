@@ -1,0 +1,37 @@
+<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
+  <voice name='en-US-JasonNeural'>
+    <mstts:express-as style="hopeful">
+      <p>
+        <s>Welcome to this mindful meditation session. I invite you to find a comfortable position that allows you to be both relaxed and alert. You may choose to sit on a chair or on the floor, or even lay down if that's more comfortable for you. Once you are comfortable, kindly close your eyes.</s>
+        <break time="20s"/>
+        <s>Let's begin by taking a few deep breaths together. Inhale deeply...hold...and exhale. Let's do this a few more times. As you do, feel the tension leaving your body with each exhale.</s>
+        <break time="20s"/>
+        <s>Now, allow your breath to find its own natural rhythm. Don't try to control it, just observe it. Feel the cool air entering your nostrils and the warm air leaving.</s>
+        <break time="30s"/>
+        <s>Take a moment to check in with yourself. Are you still focusing on your breath? If your mind has wandered, that's completely okay. Just gently guide your attention back to your breath.</s>
+        <break time="20s"/>
+        <s>Now, let's shift our attention to a body scan. Begin from the top of your head. Notice any sensations, discomfort, or relaxation there.</s>
+        <break time="10s"/>
+        <s>Move your attention to your forehead, your eyes, your cheeks, and then your jaw. Just observe, don't judge or try to change these sensations.</s>
+        <break time="10s"/>
+        <s>Now, gently move down to your neck and shoulders, noticing any tension or relaxation there.</s>
+        <break time="10s"/>
+        <s>Next, bring your attention to your chest and back, your abdomen, all the way down to your hips.</s>
+        <break time="10s"/>
+        <s>Now shift your focus to your arms, down to your hands and fingers.</s>
+        <break time="10s"/>
+        <s>Lastly, scan your legs, all the way down to your feet and toes. Remember, just observe and don't judge these sensations.</s>
+        <break time="10s"/>
+        <s>Are you still with me? If you find your mind has wandered again, simply note where it went, and then gently bring your attention back to your body scan.</s>
+        <break time="30s"/>
+        <s>Now, let's shift our attention to sounds. Without opening your eyes, listen to the sounds in your environment. They may be close or far, loud or soft. Just listen, don't judge or analyze. If your mind wanders, gently bring it back to hearing.</s>
+        <break time="30s"/>
+        <s>Check in again. If your attention has drifted, just acknowledge where it went, and then gently refocus on the sounds around you.</s>
+        <break time="30s"/>
+        <s>Finally, let's return our focus to the breath, noticing how it continues to flow in and out, like waves on the shore. Let every breath you take calm you and bring you into the present.</s>
+        <break time="20s"/>
+        <s>As we come to the end of this meditation, slowly bring your awareness back to the room. Wiggle your fingers and toes, feel the surface beneath you. When you're ready, slowly open your eyes. Thank you for taking the time for this meditation. Remember, it's perfectly fine if your mind wandered during this session. The goal is to recognize when it does and gently bring it back to focus. I hope you found this session relaxing and beneficial.</s>
+      </p>
+    </mstts:express-as>
+  </voice>
+</speak>
