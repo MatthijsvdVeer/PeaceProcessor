@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using PeaceProcessor.Functions;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
@@ -18,10 +19,3 @@ var host = new HostBuilder()
     .Build();
 
 host.Run();
-
-public class SpeechConfiguration
-{
-    public string Key { get; set; }
-
-    public string Region { get; set; }
-}
