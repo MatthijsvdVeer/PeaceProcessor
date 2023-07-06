@@ -1,20 +1,21 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Queues;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using PeaceProcessor.Functions;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices((context, collection) =>
     {
-        // collection.Configure<SpeechConfiguration>()
-        var list = context.Configuration.GetChildren().OrderBy(section => section.Key).Select(section => section.Key).ToList();
         collection.Configure<SpeechConfiguration>(configuration =>
-        {
-            configuration.Key = context.Configuration["cog_speech_key"].ToString();
-            configuration.Region = context.Configuration["cog_speech_region"].ToString();
+            {
+                configuration.Key = context.Configuration["cog_speech_key"].ToString();
+                configuration.Region = context.Configuration["cog_speech_region"].ToString();
 
-        });
+            })
+            .AddScoped(_ => new BlobContainerClient(context.Configuration["blob-connection"], "meditation"))
+            .AddScoped(_ => new QueueClient(context.Configuration["blob-connection"], "topics"));
     })
     .Build();
 

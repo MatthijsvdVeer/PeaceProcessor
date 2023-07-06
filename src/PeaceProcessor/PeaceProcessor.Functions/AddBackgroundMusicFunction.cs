@@ -1,13 +1,9 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.CognitiveServices.Speech;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 namespace PeaceProcessor.Functions
 {
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Extensions.Logging;
     using NAudio.Wave;
     using NAudio.Wave.SampleProviders;
-    using System.Reflection.PortableExecutable;
 
     internal sealed class AddBackgroundMusicFunction
     {
@@ -26,36 +22,30 @@ namespace PeaceProcessor.Functions
             [BlobInput("meditation/music/birds-forest.mp3", Connection = "blob-connection")]
             byte[] music)
         {
-            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction), name);
-            await Task.Delay(1000);
+            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction),
+                name);
 
-            // Read the narration and convert to stereo.
-            var stream = new MemoryStream(myBlob);
-            await using var waveFileReader = new WaveFileReader(stream);
+            // Read narration as a WAV file.
+            var narrationStream = new MemoryStream(myBlob);
+            await using var waveFileReader = new WaveFileReader(narrationStream);
 
             // Read the background music as an MP3.
-            var stream2 = new MemoryStream(music);
-            await using var mp3FileReader = new Mp3FileReader(stream2);
+            var musicStream = new MemoryStream(music);
+            await using var mp3FileReader = new Mp3FileReader(musicStream);
 
             // Convert it to a WAV file with the same sample rate as the narration.
             var outFormat = new WaveFormat(16000, mp3FileReader.WaveFormat.Channels);
-            using (var resampler = new MediaFoundationResampler(mp3FileReader, outFormat))
-            {
-                WaveFileWriter.CreateWaveFile("music.wav", resampler);
-            }
+            using var resampler = new MediaFoundationResampler(mp3FileReader, outFormat);
 
-            await using var reader2 = new WaveFileReader("music.wav");
-            
             // Mix the two audio streams together.
-            var mixer = new MixingSampleProvider(new[]
-                {waveFileReader.ToSampleProvider(), reader2.ToSampleProvider()});
+            var mixer = new MixingSampleProvider(
+                new[] {waveFileReader.ToSampleProvider(), resampler.ToSampleProvider()});
             var sampleProvider = mixer.Take(waveFileReader.TotalTime.Add(TimeSpan.FromSeconds(10)));
-            WaveFileWriter.CreateWaveFile16("mixed.wav", sampleProvider);
 
             // Return the mixed audio.
-            var bytes = await File.ReadAllBytesAsync("mixed.wav");
-            this.logger.LogInformation("Returning blob data. {bytes} bytes.", bytes.Length);
-            return bytes;
+            MemoryStream outStream = new();
+            WaveFileWriter.WriteWavFileToStream(outStream, sampleProvider.ToWaveProvider());
+            return outStream.ToArray();
         }
     }
 }

@@ -1,10 +1,9 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.CognitiveServices.Speech;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 namespace PeaceProcessor.Functions
 {
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.CognitiveServices.Speech;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using NAudio.Wave;
 
     internal sealed class GenerateNarrationFunction
@@ -41,27 +40,12 @@ namespace PeaceProcessor.Functions
                 throw new InvalidOperationException(cancellation.ErrorDetails);
             }
 
-
             // Convert to stereo.
-            //using var stream = AudioDataStream.FromResult(result);
-
             await using var waveFileReader = new WaveFileReader(new MemoryStream(result.AudioData));
-
-
-            //await using var waveFileReader = new WaveFileReader(stream);
             var stereo = new MonoToStereoProvider16(waveFileReader);
             var outputStream = new MemoryStream();
             WaveFileWriter.WriteWavFileToStream(outputStream, stereo);
             return outputStream.ToArray();
-        }
-
-        public static byte[] ReadFully(Stream input)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
         }
     }
 }
