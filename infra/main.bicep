@@ -118,3 +118,6 @@ module storageQueueDataContributor 'modules/storage-queue-data-contributor.bicep
     ]
   }
 }
+
+output functionAppName string = functionApp.outputs.functionAppName
+output storageAccountName string = storageAccount.name
