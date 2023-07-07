@@ -40,7 +40,7 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'dotnet'
+          value: 'dotnet-isolated'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
@@ -52,4 +52,4 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
 }
 
 output principalId string = functionApp.identity.principalId
-output functionName string = functionApp.name
+output functionAppName string = functionApp.name

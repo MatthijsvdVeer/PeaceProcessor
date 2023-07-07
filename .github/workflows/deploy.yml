@@ -1,0 +1,83 @@
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+    - 'src/**'
+    - 'infra/**'
+  workflow_dispatch:
+name: 🚀 Deploy
+
+env:
+  DOTNET_VERSION: '7.0' 
+  ARTIFACT_DIR: './artifacts'
+
+jobs:
+  deploy-infra:
+    name: 🏗️ Deploy Infrastructure
+    runs-on: ubuntu-latest
+    outputs:
+      functionsName: ${{ steps.deploy.outputs.functionAppName }}
+      storageAccountName: ${{ steps.deploy.outputs.storageAccountName }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🔑 Azure Login 
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🏗️ Deploy
+        id: deploy
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP_NAME }}
+          template: ./infra/main.bicep
+          parameters: 'tenantId=${{ secrets.AZURE_TENANT_ID }} principalId=${{ secrets.AZURE_CLIENT_ID }}'
+          failOnStdErr: false
+          
+  build-code:
+    name: 🏢 Build Code
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+
+    - name: 🔧 Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: 🏗️ Build Solution
+      shell: pwsh
+      run: |
+        mkdir ${{ env.ARTIFACT_DIR }}
+        dotnet publish ./src/PeaceProcessor/PeaceProcessor.sln --configuration Release
+        Compress-Archive -Path ./src/PeaceProcessor/PeaceProcessor.Functions/bin/Release/net7.0/publish/* -DestinationPath ${{ env.ARTIFACT_DIR }}/PeaceProcessor.Functions.zip
+
+    - name: ⬆️ Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifacts
+        path: ${{ env.ARTIFACT_DIR }}
+  
+  deploy-code:
+    name: 🚀 Deploy Code
+    runs-on: ubuntu-latest
+    needs: [build-code, deploy-infra]
+    steps:
+    - name: ⬇️ Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: artifacts
+
+    - name: 🔑 Azure Login 
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 🚀 Deploy ApiData Function
+      shell: pwsh
+      run: |
+        az functionapp deploy --resource-group ${{ env.AZURE_RESOURCE_GROUP_NAME }} --name ${{ needs.deploy-infra.outputs.functionsName }} --src-path PeaceProcessor.Fucntions.zip --type zip
+        az functionapp config appsettings set -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -n ${{ needs.deploy-infra.outputs.functionsName }} --settings "blob-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "queue-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "storage-account__blobServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "storage-account__queueServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "cog_speech_key=${{ secrets.COG_SPEECH_KEY }}" "cog_speech_region=westeurope" "schedule=0 */5 * * * *"
