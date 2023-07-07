@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +15,8 @@ var host = new HostBuilder()
                 configuration.Region = context.Configuration["cog_speech_region"].ToString();
 
             })
-            .AddScoped(_ => new BlobContainerClient(context.Configuration["blob-connection"], "meditation"))
-            .AddScoped(_ => new QueueClient(context.Configuration["blob-connection"], "topics"));
+            .AddScoped(_ => new BlobContainerClient(new Uri($"{context.Configuration["blob-connection"]}/meditation"), new DefaultAzureCredential()))
+            .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue-connection"]}/topics"), new DefaultAzureCredential()));
     })
     .Build();
 
