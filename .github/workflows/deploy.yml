@@ -32,9 +32,9 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP_NAME }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           template: ./infra/main.bicep
-          parameters: 'tenantId=${{ secrets.AZURE_TENANT_ID }} principalId=${{ secrets.AZURE_CLIENT_ID }} workspaceResourceId=${{ secrets.WORKSPACE_ID }}'
+          parameters: 'workspaceResourceId=${{ secrets.WORKSPACE_ID }}'
           failOnStdErr: false
           
   build-code:
@@ -79,5 +79,5 @@ jobs:
     - name: 🚀 Deploy ApiData Function
       shell: pwsh
       run: |
-        az functionapp deploy --resource-group ${{ env.AZURE_RESOURCE_GROUP_NAME }} --name ${{ needs.deploy-infra.outputs.functionsName }} --src-path PeaceProcessor.Fucntions.zip --type zip
-        az functionapp config appsettings set -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -n ${{ needs.deploy-infra.outputs.functionsName }} --settings "blob-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "queue-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "storage-account__blobServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "storage-account__queueServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "cog_speech_key=${{ secrets.COG_SPEECH_KEY }}" "cog_speech_region=westeurope" "schedule=0 */5 * * * *"
+        az functionapp deploy -g ${{ vars.AZURE_RESOURCE_GROUP_NAME }} -n ${{ needs.deploy-infra.outputs.functionsName }} --src-path PeaceProcessor.Functions.zip --type zip
+        az functionapp config appsettings set -g ${{ vars.AZURE_RESOURCE_GROUP_NAME }} -n ${{ needs.deploy-infra.outputs.functionsName }} --settings "blob-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "queue-connection=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "storage-account__blobServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.blob.core.windows.net" "storage-account__queueServiceUri=https://${{ needs.deploy-infra.outputs.storageAccountName }}.queue.core.windows.net" "cog_speech_key=${{ secrets.COG_SPEECH_KEY }}" "cog_speech_region=westeurope" "schedule=0 */5 * * * *"
