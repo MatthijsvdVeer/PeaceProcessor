@@ -34,7 +34,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP_NAME }}
           template: ./infra/main.bicep
-          parameters: 'tenantId=${{ secrets.AZURE_TENANT_ID }} principalId=${{ secrets.AZURE_CLIENT_ID }}'
+          parameters: 'tenantId=${{ secrets.AZURE_TENANT_ID }} principalId=${{ secrets.AZURE_CLIENT_ID }} workspaceResourceId=${{ secrets.WORKSPACE_ID }}'
           failOnStdErr: false
           
   build-code:
