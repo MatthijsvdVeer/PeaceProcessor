@@ -8,6 +8,11 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   sku: {
     name: 'Y1'
     tier: 'Dynamic'
+    size: 'Y1'
+    family: 'Y'
+  }
+  properties: {
+    reserved: true
   }
 }
 
