@@ -25,7 +25,6 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
     clientAffinityEnabled: true    
     siteConfig: {
       linuxFxVersion: 'DOTNET-ISOLATED|7.0'
-      netFrameworkVersion: 'v7.0'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
