@@ -22,9 +22,9 @@ namespace PeaceProcessor.Functions
         }
 
         [Function("AddBackgroundMusic")]
-        [BlobOutput("meditation/complete/{name}.wav", Connection = "storage-account")]
+        [BlobOutput("meditation/complete/{name}.wav", Connection = "storage_account")]
         public async Task<byte[]> Run(
-            [BlobTrigger("meditation/narration/{name}.wav", Connection = "storage-account")]
+            [BlobTrigger("meditation/narration/{name}.wav", Connection = "storage_account")]
             byte[] myBlob, string name)
         {
             this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction),

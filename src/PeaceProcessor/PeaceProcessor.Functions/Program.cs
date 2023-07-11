@@ -15,8 +15,8 @@ var host = new HostBuilder()
                 configuration.Region = context.Configuration["cog_speech_region"].ToString();
 
             })
-            .AddScoped(_ => new BlobContainerClient(new Uri($"{context.Configuration["blob-connection"]}/meditation"), new DefaultAzureCredential()))
-            .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue-connection"]}/topics"), new DefaultAzureCredential()));
+            .AddScoped(_ => new BlobContainerClient(new Uri($"{context.Configuration["blob_connection"]}/meditation"), new DefaultAzureCredential()))
+            .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue_connection"]}/topics"), new DefaultAzureCredential()));
     })
     .Build();
 

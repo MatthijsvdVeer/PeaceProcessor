@@ -23,8 +23,8 @@ namespace PeaceProcessor.Functions
         }
 
         [Function("GenerateNarration")]
-        [BlobOutput("meditation/narration/{name}.wav", Connection = "storage-account")]
-        public async Task<byte[]> Run([BlobTrigger("meditation/scripts/{name}.xml", Connection = "storage-account")] string myBlob, string name)
+        [BlobOutput("meditation/narration/{name}.wav", Connection = "storage_account")]
+        public async Task<byte[]> Run([BlobTrigger("meditation/scripts/{name}.xml", Connection = "storage_account")] string myBlob, string name)
         {
             this.logger.LogInformation("{function} triggered for blob: {name}", nameof(GenerateNarrationFunction), name);
 
