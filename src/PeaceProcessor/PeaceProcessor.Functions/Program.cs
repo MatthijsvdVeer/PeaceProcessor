@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
@@ -15,8 +16,14 @@ var host = new HostBuilder()
                 configuration.Region = context.Configuration["cog_speech_region"].ToString();
 
             })
-            .AddScoped(_ => new BlobContainerClient(new Uri($"{context.Configuration["blob_connection"]}/meditation"), new DefaultAzureCredential()))
-            .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue_connection"]}/topics"), new DefaultAzureCredential()));
+            .AddScoped(_ => new BlobContainerClient(new Uri($"{context.Configuration["blob_connection"]}/meditation"),
+                new DefaultAzureCredential()))
+            .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue_connection"]}/topics"),
+                new DefaultAzureCredential()))
+            .AddHttpClient<GenerateScriptFunction>(client =>
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", context.Configuration["openai_key"]);
+            });
     })
     .Build();
 

@@ -24,11 +24,9 @@ namespace PeaceProcessor.Functions
         [Function("AddBackgroundMusic")]
         [BlobOutput("meditation/complete/{name}.wav", Connection = "storage_account")]
         public async Task<byte[]> Run(
-            [BlobTrigger("meditation/narration/{name}.wav", Connection = "storage_account")]
-            byte[] myBlob, string name)
+            [BlobTrigger("meditation/narration/{name}.wav", Connection = "storage_account")] string name)
         {
-            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction),
-                name);
+            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction), name);
 
             var blobs = this.blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.None, "music/");
             var blobList = new List<BlobItem>();
@@ -49,8 +47,9 @@ namespace PeaceProcessor.Functions
             ms.Position = 0;
 
             // Read narration as a WAV file.
-            var narrationStream = new MemoryStream(myBlob);
-            await using var waveFileReader = new WaveFileReader(narrationStream);
+            var narrationBlob = this.blobContainerClient.GetBlobClient($"narration/{name}.wav");
+            var stream = await narrationBlob.OpenReadAsync();
+            await using var waveFileReader = new WaveFileReader(stream);
 
             // Read the background music as an MP3.
             await using var mp3FileReader = new Mp3FileReader(ms);

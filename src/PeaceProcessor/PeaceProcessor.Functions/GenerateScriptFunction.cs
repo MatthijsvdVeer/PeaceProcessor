@@ -6,24 +6,28 @@ namespace PeaceProcessor.Functions
     using System.Globalization;
     using System.Text;
     using Azure.Storage.Queues;
+    using System.Net.Http.Json;
+    using System.Text.Json;
 
     internal sealed class GenerateScriptFunction
     {
         private readonly BlobContainerClient blobContainerClient;
         private readonly QueueClient queueClient;
+        private readonly HttpClient httpClient;
         private readonly ILogger logger;
 
-        public GenerateScriptFunction(BlobContainerClient blobContainerClient, QueueClient queueClient, ILoggerFactory loggerFactory)
+        public GenerateScriptFunction(BlobContainerClient blobContainerClient, QueueClient queueClient, IHttpClientFactory httpClient, ILoggerFactory loggerFactory)
         {
             this.blobContainerClient = blobContainerClient;
             this.queueClient = queueClient;
+            this.httpClient = httpClient.CreateClient(nameof(GenerateScriptFunction));
             this.logger = loggerFactory.CreateLogger<GenerateScriptFunction>(); 
         }
 
         [Function("GenerateScript")]
         public async Task Run([TimerTrigger("%schedule%")] MyInfo myTimer)
         {
-            this.logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            this.logger.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
             var responseMessage = await this.queueClient.ReceiveMessageAsync();
             if (responseMessage.Value == null)
@@ -32,19 +36,33 @@ namespace PeaceProcessor.Functions
                 return;
             }
 
-            var format = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
-            var blobClient = this.blobContainerClient.GetBlobClient($"scripts/{format}.xml");
-            const string script = @"
+            var prompt = await File.ReadAllTextAsync("prompt.txt");
+
+            var request = new OpenAiRequest("gpt-4", 0.5);
+            request.Messages.Add(new OpenAiMessage(OpenAiRole.System, prompt));
+            request.Messages.Add(new OpenAiMessage(OpenAiRole.User, $"Today's topic will be {responseMessage.Value.Body}"));
+            string content = @"
 <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
   <voice name='en-US-JennyNeural'>
     <mstts:express-as style=""hopeful"">
-      <p>
-        <s>As we come to the end of this meditation, take one last deep breath, inhaling deeply and exhaling slowly. Gently wiggle your fingers and toes. When you’re ready, open your eyes. Thank you for your presence during this session.</s>
-      </p>
-    </mstts:express-as>
-  </voice>
-</speak>";
-            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(script)));
+      <p>";
+            request.Messages.Add(new OpenAiMessage(OpenAiRole.Assistant, content));
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = null
+            };
+            options.Converters.Add(new OpenAiRoleEnumJsonConverter());
+            var jsonContent = JsonContent.Create(request, options: options);
+            var response = await this.httpClient.PostAsync("https://api.openai.com/v1/chat/completions", jsonContent);
+
+            var format = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+            var blobClient = this.blobContainerClient.GetBlobClient($"scripts/{format}.xml");
+            var openAiResponse = await response.Content.ReadFromJsonAsync<OpenAiResponse>(options);
+            string messageContent = openAiResponse.Choices.Single().Message.Content;
+            string xml = content + messageContent;
+
+            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
             await this.queueClient.DeleteMessageAsync(responseMessage.Value.MessageId,
                 responseMessage.Value.PopReceipt);
         }
