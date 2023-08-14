@@ -1,33 +1,30 @@
-namespace PeaceProcessor.Functions
+﻿namespace PeaceProcessor.Functions.Activities
 {
-    using Azure;
+    using Microsoft.Azure.Functions.Worker;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
-    using Microsoft.Azure.Functions.Worker;
-    using Microsoft.Extensions.Logging;
-    using NAudio.Wave;
+    using Azure;
     using NAudio.Wave.SampleProviders;
+    using NAudio.Wave;
 
-    internal sealed class AddBackgroundMusicFunction
+    internal sealed class AddBackgroundMusicActivity
     {
         private const int SampleRate = 16000;
         private const int SecondsPauseAfterNarration = 10;
         private readonly BlobContainerClient blobContainerClient;
-        private readonly ILogger logger;
 
-        public AddBackgroundMusicFunction(BlobContainerClient blobContainerClient, ILoggerFactory loggerFactory)
+        public AddBackgroundMusicActivity(BlobContainerClient blobContainerClient)
         {
             this.blobContainerClient = blobContainerClient;
-            this.logger = loggerFactory.CreateLogger<AddBackgroundMusicFunction>();
         }
 
-        [Function("AddBackgroundMusic")]
-        [BlobOutput("meditation/complete/{name}.wav", Connection = "storage_account")]
-        public async Task<byte[]> Run(
-            [BlobTrigger("meditation/narration/{name}.wav", Connection = "storage_account")] string name)
+        [Function(nameof(AddBackgroundMusicActivity))]
+        public async Task<string> Run([ActivityTrigger] AddBackgroundContext addBackgroundContext,
+            FunctionContext executionContext)
         {
-            this.logger.LogInformation("{function} triggered for blob: {name}", nameof(AddBackgroundMusicFunction), name);
-
+            ILogger logger = executionContext.GetLogger(nameof(AddBackgroundMusicActivity));
             var blobs = this.blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.None, "music/");
             var blobList = new List<BlobItem>();
             await foreach (var blob in blobs)
@@ -47,9 +44,12 @@ namespace PeaceProcessor.Functions
             ms.Position = 0;
 
             // Read narration as a WAV file.
-            var narrationBlob = this.blobContainerClient.GetBlobClient($"narration/{name}.wav");
-            var stream = await narrationBlob.OpenReadAsync();
-            await using var waveFileReader = new WaveFileReader(stream);
+            logger.LogInformation($"Reading narration: {addBackgroundContext.NarrationPath}");
+            var narrationBlob = this.blobContainerClient.GetBlobClient(addBackgroundContext.NarrationPath);
+            //var stream = await narrationBlob.OpenReadAsync();
+            var stream = await narrationBlob.DownloadStreamingAsync();
+
+            await using var waveFileReader = new WaveFileReader(stream.Value.Content);
 
             // Read the background music as an MP3.
             await using var mp3FileReader = new Mp3FileReader(ms);
@@ -67,7 +67,11 @@ namespace PeaceProcessor.Functions
             // Return the mixed audio.
             MemoryStream outStream = new();
             WaveFileWriter.WriteWavFileToStream(outStream, sampleProvider.ToWaveProvider());
-            return outStream.ToArray();
+
+            var blobPath = $"{addBackgroundContext.Timestamp}/complete.wav";
+            var completeBlob = this.blobContainerClient.GetBlobClient(blobPath);
+            await completeBlob.UploadAsync(outStream, true);
+            return blobPath;
         }
     }
 }
