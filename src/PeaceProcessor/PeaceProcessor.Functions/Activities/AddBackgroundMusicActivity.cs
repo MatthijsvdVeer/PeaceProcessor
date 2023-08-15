@@ -36,23 +36,15 @@
             var random = new Random();
             var randomMusic = blobList[random.Next(blobList.Count)];
             logger.LogInformation($"Picked music file {randomMusic.Name}");
-            var blobClient = this.blobContainerClient.GetBlobClient(randomMusic.Name);
-            Response<BlobDownloadInfo> response = await blobClient.DownloadAsync();
-            using MemoryStream ms = new();
-            await response.Value.Content.CopyToAsync(ms);
-
-            // Reset the position to the start of the stream.
-            ms.Position = 0;
-
+            await using var musicStream = await this.GetStreamForBlobAsync(randomMusic.Name);
+            
             // Read narration as a WAV file.
             logger.LogInformation($"Reading narration: {addBackgroundContext.NarrationPath}");
-            var narrationBlob = this.blobContainerClient.GetBlobClient(addBackgroundContext.NarrationPath);
-            await using var narrationStream = await narrationBlob.OpenReadAsync();
-
+            await using var narrationStream = await this.GetStreamForBlobAsync(addBackgroundContext.NarrationPath);
             await using var waveFileReader = new WaveFileReader(narrationStream);
 
             // Read the background music as an MP3.
-            await using var mp3FileReader = new Mp3FileReader(ms);
+            await using var mp3FileReader = new Mp3FileReader(musicStream);
 
             // Convert it to a WAV file with the same sample rate as the narration.
             var outFormat = new WaveFormat(SampleRate, mp3FileReader.WaveFormat.Channels);
@@ -73,6 +65,12 @@
             var completeBlob = this.blobContainerClient.GetBlobClient(blobPath);
             await completeBlob.UploadAsync(outStream, true);
             return blobPath;
+        }
+
+        private async Task<ContinuousStream> GetStreamForBlobAsync(string path)
+        {
+            var blobClient = this.blobContainerClient.GetBlobClient(path);
+            return new ContinuousStream(await blobClient.OpenReadAsync());
         }
     }
 }
