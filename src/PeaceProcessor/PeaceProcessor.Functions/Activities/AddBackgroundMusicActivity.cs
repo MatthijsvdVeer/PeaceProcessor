@@ -35,6 +35,7 @@
             // Select random music file.
             var random = new Random();
             var randomMusic = blobList[random.Next(blobList.Count)];
+            logger.LogInformation($"Picked music file {randomMusic.Name}");
             var blobClient = this.blobContainerClient.GetBlobClient(randomMusic.Name);
             Response<BlobDownloadInfo> response = await blobClient.DownloadAsync();
             using MemoryStream ms = new();
@@ -46,10 +47,9 @@
             // Read narration as a WAV file.
             logger.LogInformation($"Reading narration: {addBackgroundContext.NarrationPath}");
             var narrationBlob = this.blobContainerClient.GetBlobClient(addBackgroundContext.NarrationPath);
-            //var stream = await narrationBlob.OpenReadAsync();
-            var stream = await narrationBlob.DownloadStreamingAsync();
+            await using var narrationStream = await narrationBlob.OpenReadAsync();
 
-            await using var waveFileReader = new WaveFileReader(stream.Value.Content);
+            await using var waveFileReader = new WaveFileReader(narrationStream);
 
             // Read the background music as an MP3.
             await using var mp3FileReader = new Mp3FileReader(ms);
@@ -61,12 +61,13 @@
             // Mix the two audio streams together.
             var mixer = new MixingSampleProvider(
                 new[] {waveFileReader.ToSampleProvider(), resampler.ToSampleProvider()});
-            var sampleProvider =
-                mixer.Take(waveFileReader.TotalTime.Add(TimeSpan.FromSeconds(SecondsPauseAfterNarration)));
+            TimeSpan takeDuration = waveFileReader.TotalTime.Add(TimeSpan.FromSeconds(SecondsPauseAfterNarration));
+            var sampleProvider = mixer.Take(takeDuration);
 
             // Return the mixed audio.
             MemoryStream outStream = new();
             WaveFileWriter.WriteWavFileToStream(outStream, sampleProvider.ToWaveProvider());
+            outStream.Position = 0;
 
             var blobPath = $"{addBackgroundContext.Timestamp}/complete.wav";
             var completeBlob = this.blobContainerClient.GetBlobClient(blobPath);

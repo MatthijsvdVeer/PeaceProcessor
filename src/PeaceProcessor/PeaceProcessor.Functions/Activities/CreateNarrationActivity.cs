@@ -29,7 +29,7 @@
         {
             ILogger logger = executionContext.GetLogger(nameof(CreateNarrationActivity));
             var speechConfig = SpeechConfig.FromSubscription(this.key, this.region);
-            speechConfig.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Riff24Khz16BitMonoPcm);
+            speechConfig.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Riff16Khz16BitMonoPcm);
 
             var response = await this.blobContainerClient.GetBlobClient(createNarrationContext.ScriptPath).DownloadContentAsync();
             var ssml = response.Value.Content.ToString();
@@ -52,6 +52,7 @@
 
             string blobPath = $"{createNarrationContext.Timestamp}/narration.wav";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
+            outputStream.Position = 0;
             await blobClient.UploadAsync(outputStream, true);
             
             return blobPath;
