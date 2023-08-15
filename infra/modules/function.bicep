@@ -24,7 +24,6 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
     serverFarmId: hostingPlan.id
     clientAffinityEnabled: true    
     siteConfig: {
-      linuxFxVersion: 'DOTNET-ISOLATED|7.0'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
