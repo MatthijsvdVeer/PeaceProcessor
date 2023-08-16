@@ -29,35 +29,34 @@
             logger.LogInformation("Creating script for topic: {topic}", createScriptContext.Topic);
 
             var prompt = await File.ReadAllTextAsync("prompt.txt");
-            string content = @"
-<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>
-  <voice name='en-US-JennyNeural'>
-    <mstts:express-as style=""hopeful"">
-      <p>";
+            prompt = prompt.Replace("{{TOPIC}}", createScriptContext.Topic);
+            
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
                 "gpt-4",
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt),
-                        new ChatMessage(ChatRole.User, $"Today's topic will be {createScriptContext.Topic}"),
-                        new ChatMessage(ChatRole.Assistant, content),
+                        new ChatMessage(ChatRole.System, prompt)
                     },
                     Temperature = (float) 0.7,
-                    MaxTokens = 800,
+                    MaxTokens = 2000,
                     NucleusSamplingFactor = (float) 0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0,
                 });
 
             ChatCompletions completions = responseWithoutStream.Value;
-            string xml = content + completions.Choices[0].Message.Content;
-            ;
+            var rawScript = completions.Choices[0].Message.Content;
+
+            // replace '<BREAK10>' with '<break time="10s"/>'. The number should remain the same
+            var script = rawScript.Replace("<BREAK", "<break time=\"").Replace(">", "s\"/>");
+            var ssml = await File.ReadAllTextAsync("empty.xml");
+            ssml = ssml.Replace("{{SCRIPT}}", script);
 
             string blobPath = $"{createScriptContext.Timestamp}/script.xml";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
-            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
+            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(ssml)));
             return blobPath;
         }
     }
