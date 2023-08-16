@@ -22,8 +22,9 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     httpsOnly: true
     serverFarmId: hostingPlan.id
-    clientAffinityEnabled: true    
+    clientAffinityEnabled: true
     siteConfig: {
+      netFrameworkVersion: 'v7.0'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
