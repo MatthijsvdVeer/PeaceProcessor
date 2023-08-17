@@ -51,15 +51,13 @@ jobs:
     - name: 🏗️ Build Solution
       shell: pwsh
       run: |
-        mkdir ${{ env.ARTIFACT_DIR }}
-        dotnet publish ./src/PeaceProcessor/PeaceProcessor.sln --configuration Release
-        Compress-Archive -Path ./src/PeaceProcessor/PeaceProcessor.Functions/bin/Release/net7.0/publish/* -DestinationPath ${{ env.ARTIFACT_DIR }}/PeaceProcessor.Functions.zip
+        dotnet publish ./src/PeaceProcessor/PeaceProcessor.sln --configuration Release --runtime win-x86 --self-contained true
 
     - name: ⬆️ Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: artifacts
-        path: ${{ env.ARTIFACT_DIR }}
+        path: ./src/PeaceProcessor/PeaceProcessor.Functions/bin/Release/net7.0/win-x86/
   
   deploy-code:
     name: 🚀 Deploy Code
@@ -70,6 +68,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: artifacts
+        path: ./artifacts
 
     - name: 🔑 Azure Login 
       uses: azure/login@v1
@@ -78,10 +77,9 @@ jobs:
 
     - name: 🚀 Deploy Azure Functions
       uses: Azure/functions-action@v1
-      id: fa
       with:
         app-name: ${{ needs.deploy-infra.outputs.functionsName }}
-        package: 'PeaceProcessor.Functions.zip'
+        package: ./artifacts
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
   
     - name: 🔧 Configure Azure Functions

@@ -15,16 +15,16 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing 
 resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   name: '${functionFullName}-${uniqueString(resourceGroup().id)}'
   location: location
-  kind: 'functionapp,linux'
+  kind: 'functionapp'
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     httpsOnly: true
     serverFarmId: hostingPlan.id
-    clientAffinityEnabled: true    
+    clientAffinityEnabled: true
     siteConfig: {
-      linuxFxVersion: 'DOTNET-ISOLATED|7.0'
+      netFrameworkVersion: 'v7.0'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
