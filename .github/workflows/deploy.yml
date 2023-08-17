@@ -68,6 +68,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: artifacts
+        path: ./artifacts
 
     - name: 🔑 Azure Login 
       uses: azure/login@v1
