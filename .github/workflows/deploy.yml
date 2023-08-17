@@ -51,7 +51,7 @@ jobs:
     - name: 🏗️ Build Solution
       shell: pwsh
       run: |
-        dotnet publish ./src/PeaceProcessor/PeaceProcessor.sln --configuration Release
+        dotnet publish ./src/PeaceProcessor/PeaceProcessor.sln --configuration Release --runtime win-x64 --self-contained false
 
     - name: ⬆️ Upload Artifact
       uses: actions/upload-artifact@v3
