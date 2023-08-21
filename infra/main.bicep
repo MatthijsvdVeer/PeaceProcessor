@@ -40,6 +40,7 @@ resource storageaccountDiag 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
   name: 'storageaccountDiag'
   scope: storageAccount
   properties: {
+    logAnalyticsDestinationType: 'Dedicated'
     metrics: [
       {
         category: 'Transaction'
