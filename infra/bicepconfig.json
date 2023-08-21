@@ -2,7 +2,7 @@
     "analyzers": {
       "core": {
         "enabled": true,
-        "verbose": true,
+        "verbose": false,
         "rules": {
           "adminusername-should-not-be-literal": {
             "level": "error"
