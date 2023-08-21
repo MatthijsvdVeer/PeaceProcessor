@@ -22,7 +22,7 @@ namespace PeaceProcessor.Functions
                 return req.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            string instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(CreateMeditationOrchestrator), requestBody.Topic);
+            var instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(CreateMeditationOrchestrator), requestBody.Topic);
             logger.LogInformation("Created new orchestration with instance ID = {instanceId} for topic {topic}", instanceId, requestBody.Topic);
 
             return client.CreateCheckStatusResponse(req, instanceId);

@@ -13,11 +13,11 @@
         // Reads from the wrapped Stream instance and returns the number of bytes read.
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int totalBytesRead = 0;
+            var totalBytesRead = 0;
 
             while (count > 0)
             {
-                int bytesRead = this.innerStream.Read(buffer, offset, count);
+                var bytesRead = this.innerStream.Read(buffer, offset, count);
                 if (bytesRead == 0)
                     break;
 

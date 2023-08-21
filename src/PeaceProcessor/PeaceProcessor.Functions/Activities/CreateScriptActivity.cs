@@ -53,7 +53,7 @@
             var ssml = await File.ReadAllTextAsync("empty.xml");
             ssml = ssml.Replace("{{SCRIPT}}", script);
 
-            string blobPath = $"{createScriptContext.Timestamp}/script.xml";
+            var blobPath = $"{createScriptContext.Timestamp}/script.xml";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
 
             // Store the topic in the blob metadata.
