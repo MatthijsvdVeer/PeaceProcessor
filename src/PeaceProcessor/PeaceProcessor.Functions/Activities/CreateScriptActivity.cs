@@ -27,7 +27,7 @@
             ILogger logger = executionContext.GetLogger(nameof(CreateScriptActivity));
             logger.LogInformation("Creating script for topic: {topic}", createScriptContext.Topic);
 
-            var prompt = await File.ReadAllTextAsync("prompt.txt");
+            var prompt = await File.ReadAllTextAsync("Prompts/script-prompt.txt");
             prompt = prompt.Replace("{{TOPIC}}", createScriptContext.Topic);
             
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(

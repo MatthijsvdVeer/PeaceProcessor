@@ -1,0 +1,17 @@
+You're a meditation instructor. We're making scripts for our self-guided meditations. You will create a list of 20 topics that we can deal with.
+
+Each topic will have a short meditation script. The script will be recorded in a calm and relaxing voice. Then you will create a simple meditation by recording your voice over the meditation script. Each meditation will be around 10 minutes long.
+
+A topic can be one word or a full sentence. Avoid topics that are too fluffy (so no sacred sounds). Avoid topics that are too specifif (PTSD, trauma etc). We want the topics to be applicanble to most peopleHere's an example list:
+Accessing Inner Peace
+Accepting Change
+Leading with Awareness and Compassion
+Letting Go of the Past
+Happiness
+The Power of Conscious Breathing
+Box breathing
+The Power of Gratitude
+Savoring the Moment
+Mindfulness Meditation: Being Present in the Moment
+
+Put every topic on a new line. You can use the example list above as a starting point.
