@@ -11,7 +11,7 @@ namespace PeaceProcessor.Functions
     {
         [Function("CreateMeditationFunction")]
         public static async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
             [DurableClient] DurableTaskClient client,
             FunctionContext executionContext)
         {
@@ -26,7 +26,6 @@ namespace PeaceProcessor.Functions
             logger.LogInformation("Created new orchestration with instance ID = {instanceId} for topic {topic}", instanceId, requestBody.Topic);
 
             return client.CreateCheckStatusResponse(req, instanceId);
-
         }
     }
 }
