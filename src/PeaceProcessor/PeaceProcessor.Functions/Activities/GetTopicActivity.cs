@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Azure.Storage.Blobs;
-    using Orchestrator;
     using Azure.Storage.Queues;
 
     internal sealed class GetTopicActivity

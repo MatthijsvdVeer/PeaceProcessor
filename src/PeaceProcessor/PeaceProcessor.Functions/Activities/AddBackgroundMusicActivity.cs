@@ -25,21 +25,12 @@
             FunctionContext executionContext)
         {
             ILogger logger = executionContext.GetLogger(nameof(AddBackgroundMusicActivity));
-            var blobs = this.blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.None, "music/");
-            var blobList = new List<BlobItem>();
-            await foreach (var blob in blobs)
-            {
-                blobList.Add(blob);
-            }
-
-            // Select random music file.
-            var random = new Random();
-            var randomMusic = blobList[random.Next(blobList.Count)];
-            logger.LogInformation($"Picked music file {randomMusic.Name}");
-            await using var musicStream = await this.GetStreamForBlobAsync(randomMusic.Name);
+            var musicPath = await this.GetRandomMusicPath();
+            logger.LogInformation("Picked music file {name}", musicPath);
+            await using var musicStream = await this.GetStreamForBlobAsync(musicPath);
             
             // Read narration as a WAV file.
-            logger.LogInformation($"Reading narration: {addBackgroundContext.NarrationPath}");
+            logger.LogInformation("Reading narration: {path}", addBackgroundContext.NarrationPath);
             await using var narrationStream = await this.GetStreamForBlobAsync(addBackgroundContext.NarrationPath);
             await using var waveFileReader = new WaveFileReader(narrationStream);
 
@@ -65,6 +56,21 @@
             var completeBlob = this.blobContainerClient.GetBlobClient(blobPath);
             await completeBlob.UploadAsync(outStream, true);
             return blobPath;
+        }
+
+        private async Task<string> GetRandomMusicPath()
+        {
+            var blobs = this.blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.None, "music/");
+            var blobList = new List<BlobItem>();
+            await foreach (var blob in blobs)
+            {
+                blobList.Add(blob);
+            }
+
+            // Select random music file.
+            var random = new Random();
+            var randomMusic = blobList[random.Next(blobList.Count)];
+            return randomMusic.Name;
         }
 
         private async Task<ContinuousStream> GetStreamForBlobAsync(string path)

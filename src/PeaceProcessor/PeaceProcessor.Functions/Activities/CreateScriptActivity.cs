@@ -3,12 +3,11 @@
     using Microsoft.Azure.Functions.Worker;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using System.Net.Http.Json;
-    using System.Text.Json;
     using System.Text;
     using Azure;
     using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
 
     internal sealed class CreateScriptActivity
     {
@@ -49,14 +48,26 @@
             ChatCompletions completions = responseWithoutStream.Value;
             var rawScript = completions.Choices[0].Message.Content;
 
-            // replace '<BREAK10>' with '<break time="10s"/>'. The number should remain the same
+            // Replace '<BREAK10>' with '<break time="10s"/>'. The number should remain the same
             var script = rawScript.Replace("<BREAK", "<break time=\"").Replace(">", "s\"/>");
             var ssml = await File.ReadAllTextAsync("empty.xml");
             ssml = ssml.Replace("{{SCRIPT}}", script);
 
             string blobPath = $"{createScriptContext.Timestamp}/script.xml";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
-            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(ssml)));
+
+            // Store the topic in the blob metadata.
+            Dictionary<string, string> metadata = new()
+            {
+                { "topic", StringUtility.FormatForTopicMetadata(createScriptContext.Topic) }
+            };
+
+            var blobUploadOptions = new BlobUploadOptions
+            {
+                Metadata = metadata
+            };
+
+            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(ssml)), blobUploadOptions);
             return blobPath;
         }
     }
