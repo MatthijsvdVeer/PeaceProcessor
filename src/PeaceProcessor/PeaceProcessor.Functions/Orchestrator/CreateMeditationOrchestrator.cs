@@ -10,12 +10,8 @@
         [Function("CreateMeditationOrchestrator")]
         public static async Task<string> Run([OrchestrationTrigger]TaskOrchestrationContext context)
         {
-            var topic = context.GetInput<string>();
-            // string timestamp = context.CurrentUtcDateTime.ToString("o");
-            // get the timestamp in the format of yyyyMMddHHmmss
-            string timestamp = context.CurrentUtcDateTime.ToString("yyyyMMddHHmmss");
-
-
+            var topic = context.GetInput<string>() ?? throw new InvalidOperationException("Topic is null");
+            var timestamp = context.CurrentUtcDateTime.ToString("yyyyMMddHHmmss");
 
             var createScriptContext = new CreateScriptContext(topic, timestamp);
             var scriptPath = await context.CallActivityAsync<string>(nameof(CreateScriptActivity), createScriptContext);

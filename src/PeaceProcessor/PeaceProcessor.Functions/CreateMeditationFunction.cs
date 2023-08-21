@@ -17,16 +17,16 @@ namespace PeaceProcessor.Functions
         {
             ILogger logger = executionContext.GetLogger(nameof(CreateMeditationFunction));
             var requestBody = await req.ReadFromJsonAsync<RequestBody>();
+            if (requestBody is null)
+            {
+                return req.CreateResponse(HttpStatusCode.BadRequest);
+            }
 
             string instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(CreateMeditationOrchestrator), requestBody.Topic);
-            logger.LogInformation("Created new orchestration with instance ID = {instanceId}", instanceId);
+            logger.LogInformation("Created new orchestration with instance ID = {instanceId} for topic {topic}", instanceId, requestBody.Topic);
 
             return client.CreateCheckStatusResponse(req, instanceId);
-        }
-    }
 
-    internal sealed class RequestBody
-    {
-        public string Topic { get; set; }
+        }
     }
 }

@@ -32,15 +32,13 @@
             speechConfig.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Riff16Khz16BitMonoPcm);
 
             var response = await this.blobContainerClient.GetBlobClient(createNarrationContext.ScriptPath).DownloadContentAsync();
-            var ssml = response.Value.Content.ToString();
-
             using var speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
-            var result = await speechSynthesizer.SpeakSsmlAsync(ssml);
+            var result = await speechSynthesizer.SpeakSsmlAsync(response.Value.Content.ToString());
 
             if (result.Reason == ResultReason.Canceled)
             {
                 var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
-                logger.LogError(cancellation.ErrorDetails);
+                logger.LogError("Speech synthesis was cancelled with error code: {code}. Details: {details}", cancellation.ErrorCode, cancellation.ErrorDetails);
                 throw new InvalidOperationException(cancellation.ErrorDetails);
             }
 
@@ -50,6 +48,7 @@
             var outputStream = new MemoryStream();
             WaveFileWriter.WriteWavFileToStream(outputStream, stereo);
 
+            // Upload to blob storage.
             string blobPath = $"{createNarrationContext.Timestamp}/narration.wav";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
             outputStream.Position = 0;
