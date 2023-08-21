@@ -3,15 +3,11 @@
     using Microsoft.Azure.Functions.Worker;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Azure.Storage.Blobs;
     using Azure.Storage.Queues;
 
     internal sealed class GetTopicActivity
     {
         private readonly QueueClient queueClient;
-        private readonly BlobContainerClient blobContainerClient;
-        private readonly HttpClient httpClient;
-
         public GetTopicActivity(QueueClient queueClient)
         {
             this.queueClient = queueClient;

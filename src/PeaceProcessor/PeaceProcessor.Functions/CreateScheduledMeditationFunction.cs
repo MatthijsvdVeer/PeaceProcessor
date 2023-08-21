@@ -29,7 +29,7 @@ namespace PeaceProcessor.Functions
                 return;
             }
 
-            string instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(CreateMeditationOrchestrator), responseMessage.Value.MessageText);
+            var instanceId = await client.ScheduleNewOrchestrationInstanceAsync(nameof(CreateMeditationOrchestrator), responseMessage.Value.MessageText);
             logger.LogInformation("Created new orchestration with instance ID = {instanceId} for topic {topic}", instanceId, responseMessage.Value.MessageText);
 
             await this.queueClient.DeleteMessageAsync(responseMessage.Value.MessageId, responseMessage.Value.PopReceipt);
