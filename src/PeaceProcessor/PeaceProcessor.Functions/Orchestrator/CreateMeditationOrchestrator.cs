@@ -27,7 +27,10 @@
             var addBackgroundContext = new AddBackgroundContext(narrationPath, timestamp);
             var completePath = await context.CallActivityAsync<string>(nameof(AddBackgroundMusicActivity), addBackgroundContext);
             
-            return completePath;
+            var createVideoContext = new CreateVideoContext(completePath, imagePath, timestamp);
+            var videoPath = await context.CallActivityAsync<string>(nameof(CreateVideoActivity), createVideoContext);
+
+            return videoPath;
         }
     }
 }
