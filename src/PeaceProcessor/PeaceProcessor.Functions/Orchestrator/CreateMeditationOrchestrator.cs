@@ -15,12 +15,18 @@
 
             var createScriptContext = new CreateScriptContext(topic, timestamp);
             var scriptPath = await context.CallActivityAsync<string>(nameof(CreateScriptActivity), createScriptContext);
+            
+            var imagePromptPath = await context.CallActivityAsync<string>(nameof(CreateImagePromptActivity), createScriptContext);
+
+            var createImageContext = new CreateImageContext(imagePromptPath, timestamp);
+            var imagePath = await context.CallActivityAsync<string>(nameof(CreateImageActivity), createImageContext);
 
             var createNarrationContext = new CreateNarrationContext(scriptPath, timestamp);
             var narrationPath = await context.CallActivityAsync<string>(nameof(CreateNarrationActivity), createNarrationContext);
 
             var addBackgroundContext = new AddBackgroundContext(narrationPath, timestamp);
             var completePath = await context.CallActivityAsync<string>(nameof(AddBackgroundMusicActivity), addBackgroundContext);
+            
             return completePath;
         }
     }

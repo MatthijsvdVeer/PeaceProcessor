@@ -20,8 +20,7 @@ var host = new HostBuilder()
                 new DefaultAzureCredential()))
             .AddScoped(_ => new QueueClient(new Uri($"{context.Configuration["queue_connection"]}/topics"),
                 new DefaultAzureCredential()))
-            .AddScoped(_ => new OpenAIClient(new Uri(context.Configuration["openai_endpoint"]),
-                new AzureKeyCredential(context.Configuration["openai_key"])));
+            .AddTransient(_ => new OpenAiClientFactory(context.Configuration));
     })
     .Build();
 
