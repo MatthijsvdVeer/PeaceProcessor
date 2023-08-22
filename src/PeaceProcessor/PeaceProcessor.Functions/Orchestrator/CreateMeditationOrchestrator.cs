@@ -16,18 +16,20 @@
             var createScriptContext = new CreateScriptContext(topic, timestamp);
             var scriptPath = await context.CallActivityAsync<string>(nameof(CreateScriptActivity), createScriptContext);
             
-            var imagePromptPath = await context.CallActivityAsync<string>(nameof(CreateImagePromptActivity), createScriptContext);
-
-            var createImageContext = new CreateImageContext(imagePromptPath, timestamp);
-            var imagePath = await context.CallActivityAsync<string>(nameof(CreateImageActivity), createImageContext);
 
             var createNarrationContext = new CreateNarrationContext(scriptPath, timestamp);
             var narrationPath = await context.CallActivityAsync<string>(nameof(CreateNarrationActivity), createNarrationContext);
 
             var addBackgroundContext = new AddBackgroundContext(narrationPath, timestamp);
-            var completePath = await context.CallActivityAsync<string>(nameof(AddBackgroundMusicActivity), addBackgroundContext);
-            
-            var createVideoContext = new CreateVideoContext(completePath, imagePath, timestamp);
+            var addBackgroundMusic = context.CallActivityAsync<string>(nameof(AddBackgroundMusicActivity), addBackgroundContext);
+
+            var createImagePrompt = context.CallActivityAsync<string>(nameof(CreateImagePromptActivity), createScriptContext);
+            await Task.WhenAll(createImagePrompt, addBackgroundMusic);
+
+            var createImageContext = new CreateImageContext(createImagePrompt.Result, timestamp);
+            var imagePath = await context.CallActivityAsync<string>(nameof(CreateImageActivity), createImageContext);
+
+            var createVideoContext = new CreateVideoContext(addBackgroundMusic.Result, imagePath, timestamp);
             var videoPath = await context.CallActivityAsync<string>(nameof(CreateVideoActivity), createVideoContext);
 
             return videoPath;
