@@ -6,10 +6,8 @@ namespace PeaceProcessor.Functions
     using Microsoft.Extensions.Logging;
     using Xabe.FFmpeg.Downloader;
 
-    public class DownloadFfmpegFunction
+    public sealed class DownloadFfmpegFunction
     {
-        private readonly ILogger logger;
-        
         [Function("DownloadFfmpegFunction")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req, FunctionContext functionContext)
         {
