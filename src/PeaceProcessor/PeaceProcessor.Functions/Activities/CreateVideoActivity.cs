@@ -32,6 +32,10 @@
             {
                 Directory.CreateDirectory($"../{createVideoContext.Timestamp}");
 
+#if !DEBUG
+                FFmpeg.SetExecutablesPath("./");
+#endif
+
                 logger.LogInformation("Creating video for audio {audio} and image {image}",
                     createVideoContext.AudioPath,
                     createVideoContext.ImagePath);
