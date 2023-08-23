@@ -1,11 +1,12 @@
 {
-    "version": "2.0",
+  "version": "2.0",
+  "functionTimeout": "00:05:00",
   "logging": {
-      "logLevel" : {
-        "default": "Information",
-        "Microsoft": "Warning",
-        "Microsoft.Hosting.Lifetime": "Information"
-      },
+    "logLevel": {
+      "default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    },
     "applicationInsights": {
       "samplingSettings": {
         "isEnabled": true,
