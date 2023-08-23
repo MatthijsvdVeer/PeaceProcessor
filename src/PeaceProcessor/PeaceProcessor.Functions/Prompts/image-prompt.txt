@@ -1,0 +1,9 @@
+Create a prompt for a square image. The prompt will be sent to an AI algorithm that creates an image. Only reply with the prompt.
+
+The prompt should be for a colourful and calming image for a meditation session. The topic for that session is {{TOPIC}}.
+
+The prompt should mention what's shown, as well as the colours and the mood. Here are some examples:
+The seattle skyline and space needle, impressionist painting
+A forest with a river, vibrant, realistic
+A sunset over the ocean, calming, oil on canvas
+A skyscraper built from wood, vibrant, photo

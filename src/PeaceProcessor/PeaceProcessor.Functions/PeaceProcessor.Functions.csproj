@@ -23,6 +23,8 @@
     <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.30.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.2.6" />
+    <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.6" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empty.xml">
@@ -34,6 +36,9 @@
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="Prompts\image-prompt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Prompts\topics-prompt.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

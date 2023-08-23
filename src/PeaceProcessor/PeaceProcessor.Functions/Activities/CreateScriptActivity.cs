@@ -14,10 +14,10 @@
         private readonly BlobContainerClient blobContainerClient;
         private readonly OpenAIClient openAiClient;
 
-        public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAIClient openAiClient)
+        public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory)
         {
             this.blobContainerClient = blobContainerClient;
-            this.openAiClient = openAiClient;
+            this.openAiClient = openAiClientFactory.Create(OpenAiKind.Chat);
         }
 
         [Function(nameof(CreateScriptActivity))]

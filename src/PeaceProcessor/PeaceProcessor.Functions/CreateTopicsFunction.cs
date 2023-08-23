@@ -8,17 +8,16 @@ namespace PeaceProcessor.Functions
     using Microsoft.Azure.Functions.Worker.Http;
     using Microsoft.DurableTask.Client;
     using Microsoft.Extensions.Logging;
-    using Orchestrator;
 
     public class CreateTopicsFunction
     {
         private readonly QueueClient queueClient;
         private readonly OpenAIClient openAiClient;
 
-        public CreateTopicsFunction(QueueClient queueClient, OpenAIClient openAiClient)
+        public CreateTopicsFunction(QueueClient queueClient, OpenAiClientFactory openAiClientFactory)
         {
             this.queueClient = queueClient;
-            this.openAiClient = openAiClient;
+            this.openAiClient = openAiClientFactory.Create(OpenAiKind.Chat);
         }
 
         [Function("CreateTopicsFunction")]
@@ -54,7 +53,7 @@ namespace PeaceProcessor.Functions
             foreach (var line in lines)
             {
                 logger.LogInformation("Sending topic: {topic}", line);
-                await this.queueClient.SendMessageAsync(line);
+                await this.queueClient.SendMessageAsync(line, timeToLive: TimeSpan.MaxValue);
             }
             return req.CreateResponse(HttpStatusCode.OK);
         }
