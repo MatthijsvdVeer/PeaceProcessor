@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Orchestrator;
     using Microsoft.CognitiveServices.Speech;
     using NAudio.Wave;
     using Azure.Storage.Blobs;
@@ -30,10 +29,11 @@
             ILogger logger = executionContext.GetLogger(nameof(CreateNarrationActivity));
             var speechConfig = SpeechConfig.FromSubscription(this.key, this.region);
             speechConfig.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Riff16Khz16BitMonoPcm);
-
-            var response = await this.blobContainerClient.GetBlobClient(createNarrationContext.ScriptPath).DownloadContentAsync();
+            
+            // Set the audio config to null. otherwise it will try to use the default audio device.
+            // Pretty sure Azure data centers don't have a default audio device.
             using var speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
-            var result = await speechSynthesizer.SpeakSsmlAsync(response.Value.Content.ToString());
+            var result = await speechSynthesizer.SpeakSsmlAsync(createNarrationContext.Script);
 
             if (result.Reason == ResultReason.Canceled)
             {

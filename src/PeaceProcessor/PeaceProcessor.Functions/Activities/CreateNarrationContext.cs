@@ -1,4 +1,4 @@
 ﻿namespace PeaceProcessor.Functions.Activities
 {
-    internal record CreateNarrationContext(string ScriptPath, string Timestamp);
+    internal record CreateNarrationContext(string Script, string Timestamp);
 }

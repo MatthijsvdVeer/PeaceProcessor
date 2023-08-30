@@ -1,4 +1,4 @@
 ﻿namespace PeaceProcessor.Functions.Activities
 {
-    internal record CreateImageContext(string PromptPath, string Timestamp);
+    internal record CreateImageContext(string ImagePrompt, string Timestamp);
 }
