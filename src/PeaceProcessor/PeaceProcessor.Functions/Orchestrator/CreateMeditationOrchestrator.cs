@@ -35,9 +35,9 @@
             var videoPath = await context.CallActivityAsync<string>(nameof(CreateVideoActivity), createVideoContext);
 
             var uploadVideoContext = new UploadVideoContext(createVideoMetadata.Result.VideoTitle, createVideoMetadata.Result.VideoDescription, videoPath);
-            await context.CallActivityAsync(nameof(UploadVideoActivity), uploadVideoContext);
+            var videoUrl = await context.CallActivityAsync<string>(nameof(UploadVideoActivity), uploadVideoContext);
 
-            return videoPath;
+            return videoUrl;
         }
     }
 }
