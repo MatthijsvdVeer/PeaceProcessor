@@ -5,10 +5,10 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: 'plan-${applicationName}-${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
-    name: 'Y1'
-    tier: 'Dynamic'
-    size: 'Y1'
-    family: 'Y'
+    name: 'B1'
+    tier: 'Basic'
+    size: 'B1'
+    family: 'B'
   }
 }
 
