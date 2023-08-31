@@ -5,18 +5,13 @@
     using Microsoft.Extensions.Logging;
     using Azure.AI.OpenAI;
     using Azure;
-    using Azure.Storage.Blobs;
-    using Azure.Storage.Blobs.Models;
-    using System.Text;
 
     internal sealed class CreateImagePromptActivity
     {
-        private readonly BlobContainerClient blobContainerClient;
         private readonly OpenAIClient openAiClient;
 
-        public CreateImagePromptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory)
+        public CreateImagePromptActivity(OpenAiClientFactory openAiClientFactory)
         {
-            this.blobContainerClient = blobContainerClient;
             this.openAiClient = openAiClientFactory.Create(OpenAiKind.Chat);
         }
 
@@ -46,12 +41,7 @@
 
             ChatCompletions completions = responseWithoutStream.Value;
             var imagePrompt = completions.Choices[0].Message.Content;
-
-            var blobPath = $"{createScriptContext.Timestamp}/image-prompt.txt";
-            var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
-
-            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(imagePrompt)));
-            return blobPath;
+            return imagePrompt;
         }
     }
 }

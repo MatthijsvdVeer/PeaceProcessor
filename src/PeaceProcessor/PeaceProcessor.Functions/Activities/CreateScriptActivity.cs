@@ -68,7 +68,7 @@
             };
 
             await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(ssml)), blobUploadOptions);
-            return blobPath;
+            return ssml;
         }
     }
 }
