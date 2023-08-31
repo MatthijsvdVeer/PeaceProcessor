@@ -22,7 +22,6 @@
             ILogger logger = executionContext.GetLogger(nameof(CreateImagePromptActivity));
             logger.LogInformation("Creating image prompt for topic: {topic}", createScriptContext.Topic);
             var prompt = await File.ReadAllTextAsync("Prompts/image-prompt.txt");
-            prompt = prompt.Replace("{{TOPIC}}", createScriptContext.Topic);
 
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
                 "gpt-4",
@@ -30,7 +29,8 @@
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt)
+                        new ChatMessage(ChatRole.System, prompt),
+                        new ChatMessage(ChatRole.User, createScriptContext.Topic)
                     },
                     Temperature = (float)0.7,
                     MaxTokens = 2000,
