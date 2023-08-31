@@ -37,7 +37,7 @@
             ILogger logger = executionContext.GetLogger(nameof(UploadVideoActivity));
             logger.LogInformation("Uploading video {topic}", uploadVideoContext.VideoPath);
 
-            var credential = this.GetGoogleCredential();
+            var credential = this.GetGoogleCredential(logger);
 
             // Create the YouTube service
             var youTubeService = new YouTubeService(new BaseClientService.Initializer
@@ -85,14 +85,23 @@
             return $"https://www.youtube.com/watch?v={videoResult.Id}";
         }
 
-        private GoogleCredential GetGoogleCredential()
+        private GoogleCredential GetGoogleCredential(ILogger logger)
         {
             // Load the service account credentials
-            GoogleCredential credential = GoogleCredential.FromJson(this.principal)
-                .CreateScoped(YouTubeService.Scope.YoutubeUpload, YouTubeService.Scope.Youtube);
+            try
+            {
+                GoogleCredential credential = GoogleCredential.FromJson(this.principal)
+                    .CreateScoped(YouTubeService.Scope.YoutubeUpload, YouTubeService.Scope.Youtube);
 
-            credential = credential.CreateWithUser(this.userAccount);
-            return credential;
+                credential = credential.CreateWithUser(this.userAccount);
+                return credential;
+            }
+
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Error while parsing principal.");
+                throw;
+            }
         }
 
         private static void ProgressChanged(IUploadProgress progress, ILogger logger)
