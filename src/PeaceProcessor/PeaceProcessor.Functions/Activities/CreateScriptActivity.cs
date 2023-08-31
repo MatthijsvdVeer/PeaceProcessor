@@ -28,21 +28,20 @@
             logger.LogInformation("Creating script for topic: {topic}", createScriptContext.Topic);
 
             var prompt = await File.ReadAllTextAsync("Prompts/script-prompt.txt");
-            prompt = prompt.Replace("{{TOPIC}}", createScriptContext.Topic);
-            
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
                 "gpt-4",
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt)
+                        new ChatMessage(ChatRole.System, prompt),
+                        new ChatMessage(ChatRole.User, createScriptContext.Topic)
                     },
-                    Temperature = (float) 0.7,
-                    MaxTokens = 2000,
+                    Temperature = (float) 0.8,
+                    MaxTokens = 5000,
                     NucleusSamplingFactor = (float) 0.95,
                     FrequencyPenalty = 0,
-                    PresencePenalty = 0,
+                    PresencePenalty = 0
                 });
 
             ChatCompletions completions = responseWithoutStream.Value;
