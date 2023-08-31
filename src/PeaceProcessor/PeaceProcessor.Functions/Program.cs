@@ -1,5 +1,3 @@
-using Azure;
-using Azure.AI.OpenAI;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;

@@ -3,7 +3,6 @@
     using Microsoft.Azure.Functions.Worker;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.YouTube.v3;
@@ -20,7 +19,7 @@
         private readonly string playlist;
         private readonly string principal;
 
-        public UploadVideoActivity(OpenAiClientFactory aiClientFactory, BlobContainerClient blobContainerClient,
+        public UploadVideoActivity(BlobContainerClient blobContainerClient,
             IConfiguration configuration)
         {
             this.blobContainerClient = blobContainerClient;
@@ -87,7 +86,6 @@
 
         private GoogleCredential GetGoogleCredential(ILogger logger)
         {
-            // Load the service account credentials
             try
             {
                 GoogleCredential credential = GoogleCredential.FromJson(this.principal)

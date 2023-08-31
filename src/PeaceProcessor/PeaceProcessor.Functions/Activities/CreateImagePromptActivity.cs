@@ -5,8 +5,6 @@
     using Microsoft.Extensions.Logging;
     using Azure.AI.OpenAI;
     using Azure;
-    using Azure.Storage.Blobs;
-    using System.Text;
 
     internal sealed class CreateImagePromptActivity
     {

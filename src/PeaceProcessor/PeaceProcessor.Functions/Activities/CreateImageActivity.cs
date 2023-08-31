@@ -2,11 +2,9 @@
 {
     using Microsoft.Azure.Functions.Worker;
     using System.Threading.Tasks;
-    using Azure;
     using Microsoft.Extensions.Logging;
     using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
-    using Azure.Storage.Blobs.Models;
 
     internal sealed class CreateImageActivity
     {
