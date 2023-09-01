@@ -6,6 +6,16 @@ The prompt should be for a colourful and calming image for a meditation session.
 - Adding an adjective like "gourgeous", "stunning" or "breathtaking" can make a big difference.
 - Don't ask for numbers or letters.
 
+Describe what you see on the picture
+Don't say: A painting indicating happiness
+Say: A painting of a smiling person, in the style of expressionism
+
+Don't say: A picture depicting our core values
+Say: A group of people holding hands and talking to each other. In the style of a renaissance painting
+
+Don't say: Photo of a forest
+Say: Birds flying over trees in a forest, a small river in the background. Digital art
+
 Here are some examples:
 The gorgeous Seattle skyline and space needle, impressionist painting
 - A forest with a river, vibrant, realistic
@@ -14,3 +24,4 @@ The gorgeous Seattle skyline and space needle, impressionist painting
 - A realistic 3D rendering of a busteling city, futuristic, vibrant
 - An old couple sitting on a bench in a park, in the style of starry night
 - A lion resting in the savannah, the sun going down, photorealistic
+- A cairn overlooking a lake, calming, street art
