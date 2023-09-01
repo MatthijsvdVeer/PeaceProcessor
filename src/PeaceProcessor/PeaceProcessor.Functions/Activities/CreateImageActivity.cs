@@ -5,6 +5,8 @@
     using Microsoft.Extensions.Logging;
     using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
+    using System.Text;
 
     internal sealed class CreateImageActivity
     {
@@ -28,7 +30,19 @@
             Stream stream = await new HttpClient().GetStreamAsync(response.Value.Data[0].Url);
             var blobPath = $"{createImageContext.Timestamp}/image.png";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
-            await blobClient.UploadAsync(stream);
+
+            // Store the prompt in the blob metadata.
+            Dictionary<string, string> metadata = new()
+            {
+                { "prompt", StringUtility.FormatForTopicMetadata(createImageContext.ImagePrompt) }
+            };
+
+            var blobUploadOptions = new BlobUploadOptions
+            {
+                Metadata = metadata
+            };
+
+            await blobClient.UploadAsync(stream, blobUploadOptions);
             return blobPath;
         }
     }

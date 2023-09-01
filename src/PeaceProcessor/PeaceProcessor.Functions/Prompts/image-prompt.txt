@@ -4,6 +4,7 @@ The prompt should be for a colourful and calming image for a meditation session.
 - Start with the character before the landscape, if there are characters involved, so you can get the body morphology right before filling the rest.
 - The prompt should mention what's shown, as well as the colours and the mood. 
 - Adding an adjective like "gourgeous", "stunning" or "breathtaking" can make a big difference.
+- Don't ask for numbers or letters.
 
 Here are some examples:
 The gorgeous Seattle skyline and space needle, impressionist painting
@@ -11,3 +12,5 @@ The gorgeous Seattle skyline and space needle, impressionist painting
 - A sunset over the ocean, calming, oil on canvas
 - A skyscraper built from wood, vibrant, photo
 - A realistic 3D rendering of a busteling city, futuristic, vibrant
+- An old couple sitting on a bench in a park, in the style of starry night
+- A lion resting in the savannah, the sun going down, photorealistic
