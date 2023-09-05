@@ -1,9 +1,21 @@
-Create a prompt for a square image. The prompt will be sent to an AI algorithm that creates an image. Only reply with the prompt.
+Create a prompt for a square image. The prompt will be sent to an AI algorithm that creates an image. Only reply with the prompt. Keep the prompt under 200 characters on one single line.
 
 The prompt should be for a colourful and calming image for a meditation session. The user will supply you with the topic. Here's some tips:
 - Start with the character before the landscape, if there are characters involved, so you can get the body morphology right before filling the rest.
+- End with the style of the image, like "in the style of impressionism" or "in the style of a renaissance painting"
 - The prompt should mention what's shown, as well as the colours and the mood. 
 - Adding an adjective like "gourgeous", "stunning" or "breathtaking" can make a big difference.
+- Don't ask for numbers or letters.
+
+Describe what you see on the picture
+Don't say: A painting indicating happiness
+Say: A painting of a smiling person, in the style of expressionism
+
+Don't say: A picture depicting our core values
+Say: A group of people holding hands and talking to each other. In the style of a renaissance painting
+
+Don't say: Photo of a forest
+Say: Birds flying over trees in a forest, a small river in the background. Digital art
 
 Here are some examples:
 The gorgeous Seattle skyline and space needle, impressionist painting
@@ -11,3 +23,6 @@ The gorgeous Seattle skyline and space needle, impressionist painting
 - A sunset over the ocean, calming, oil on canvas
 - A skyscraper built from wood, vibrant, photo
 - A realistic 3D rendering of a busteling city, futuristic, vibrant
+- An old couple sitting on a bench in a park, in the style of starry night
+- A lion resting in the savannah, the sun going down, photorealistic
+- A cairn overlooking a lake, calming, street art
