@@ -24,7 +24,7 @@
             this.openAiClient = openAiClientFactory.Create(OpenAiKind.Chat);
             this.model = configuration["model"];
             this.temperature = float.Parse(configuration["temperature"]);
-            this.maxTokens = int.Parse(configuration["maxTokens"]);
+            this.maxTokens = int.Parse(configuration["max_tokens"]);
         }
 
         [Function(nameof(CreateScriptActivity))]
