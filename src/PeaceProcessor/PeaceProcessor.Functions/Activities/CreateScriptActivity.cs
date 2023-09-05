@@ -8,16 +8,23 @@
     using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
+    using Microsoft.Extensions.Configuration;
 
     internal sealed class CreateScriptActivity
     {
         private readonly BlobContainerClient blobContainerClient;
         private readonly OpenAIClient openAiClient;
+        private readonly string model;
+        private readonly float temperature;
+        private readonly int maxTokens;
 
-        public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory)
+        public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory, IConfiguration configuration)
         {
             this.blobContainerClient = blobContainerClient;
             this.openAiClient = openAiClientFactory.Create(OpenAiKind.Chat);
+            this.model = configuration["model"];
+            this.temperature = float.Parse(configuration["temperature"]);
+            this.maxTokens = int.Parse(configuration["max_tokens"]);
         }
 
         [Function(nameof(CreateScriptActivity))]
@@ -29,7 +36,7 @@
 
             var prompt = await File.ReadAllTextAsync("Prompts/script-prompt.txt");
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
-                "gpt-4",
+                this.model,
                 new ChatCompletionsOptions
                 {
                     Messages =
@@ -37,8 +44,8 @@
                         new ChatMessage(ChatRole.System, prompt),
                         new ChatMessage(ChatRole.User, createScriptContext.Topic)
                     },
-                    Temperature = (float) 0.8,
-                    MaxTokens = 5000,
+                    Temperature = this.temperature,
+                    MaxTokens = this.maxTokens,
                     NucleusSamplingFactor = (float) 0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0

@@ -1,0 +1,24 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "blob_connection": "https://[storage].blob.core.windows.net",
+    "queue_connection": "https://[storage].queue.core.windows.net",
+    "storage_account__blobServiceUri": "https://[storage].blob.core.windows.net",
+    "storage_account__queueServiceUri": "https://[storage].queue.core.windows.net",
+    "cog_speech_key": "",
+    "cog_speech_region": "",
+    "schedule": "0 0 0 * * *",
+    "openai_image_endpoint": "",
+    "openai_image_key": "",
+    "openai_chat_endpoint": "",
+    "openai_chat_key": "",
+    "youtube_user_account": "",
+    "youtube_playlist": "",
+    "youtube_principal": "",
+    "model": "gpt-4",
+    "temperature": "0.9",
+    "max_tokens": "4000"
+  }
+}
