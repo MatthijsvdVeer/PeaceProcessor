@@ -4,6 +4,7 @@
     using Microsoft.DurableTask;
     using System.Threading.Tasks;
     using Activities;
+    using DurableTask.Core;
 
     internal sealed class CreateMeditationOrchestrator
     {
@@ -31,8 +32,11 @@
             var createImageContext = new CreateImageContext(createImagePrompt.Result, timestamp);
             var imagePath = await context.CallActivityAsync<string>(nameof(CreateImageActivity), createImageContext);
 
+            var options = TaskOptions.FromRetryPolicy(new RetryPolicy(
+                maxNumberOfAttempts: 1,
+                firstRetryInterval: TimeSpan.FromSeconds(5)));
             var createVideoContext = new CreateVideoContext(addBackgroundMusic.Result, imagePath, timestamp);
-            var videoPath = await context.CallActivityAsync<string>(nameof(CreateVideoActivity), createVideoContext);
+            var videoPath = await context.CallActivityAsync<string>(nameof(CreateVideoActivity), createVideoContext, options);
 
             var uploadVideoContext = new UploadVideoContext(createVideoMetadata.Result.VideoTitle, createVideoMetadata.Result.VideoDescription, videoPath);
             var videoUrl = await context.CallActivityAsync<string>(nameof(UploadVideoActivity), uploadVideoContext);

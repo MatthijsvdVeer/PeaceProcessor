@@ -23,14 +23,18 @@
         public async Task<string> Run([ActivityTrigger] CreateVideoContext createVideoContext,
             FunctionContext executionContext)
         {
-            ILogger logger = executionContext.GetLogger(nameof(CreateVideoActivity));
-            var audioPath = $"../{createVideoContext.Timestamp}/{AudioFileName}";
-            var imagePath = $"../{createVideoContext.Timestamp}/{ImageFileName}";
-            var outputPath = $"../{createVideoContext.Timestamp}/{OutputFileName}";
+            ILogger logger = executionContext.GetLogger(nameof(CreateVideoActivity)); 
+
+            // Creating a unique output folder in case of activity retries.
+            var uniqueId = Guid.NewGuid().ToString();
+            var baseDir = $"../{createVideoContext.Timestamp}_{uniqueId}";
+            var audioPath = $"../{baseDir}/{AudioFileName}";
+            var imagePath = $"../{baseDir}/{ImageFileName}";
+            var outputPath = $"../{baseDir}/{OutputFileName}";
 
             try
             {
-                Directory.CreateDirectory($"../{createVideoContext.Timestamp}");
+                Directory.CreateDirectory($"../{baseDir}");
 
 #if !DEBUG
                 FFmpeg.SetExecutablesPath("./");
@@ -64,7 +68,7 @@
                     .AddParameter("-b:a 192k", ParameterPosition.PostInput)
                     .Start();
 
-                var blobPath = $"{createVideoContext.Timestamp}/output.mp4";
+                var blobPath = $"{baseDir}/output.mp4";
                 var outputBlobClient = this.blobContainerClient.GetBlobClient(blobPath);
                 await using FileStream fileStream = File.OpenRead(outputPath);
                 await outputBlobClient.UploadAsync(fileStream);
@@ -77,7 +81,7 @@
             }
             finally
             {
-                Directory.Delete($"../{createVideoContext.Timestamp}", true);
+                Directory.Delete($"../{baseDir}", true);
             }
         }
     }
