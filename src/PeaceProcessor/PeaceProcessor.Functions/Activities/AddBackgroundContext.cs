@@ -1,4 +1,4 @@
 ﻿namespace PeaceProcessor.Functions.Activities
 {
-    internal record AddBackgroundContext(string NarrationPath, string Timestamp);
+    internal record AddBackgroundContext(string NarrationPath, string StoragePath);
 }

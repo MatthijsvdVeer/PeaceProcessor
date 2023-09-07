@@ -28,7 +28,7 @@
 
             var response = await this.openAiClient.GetImageGenerationsAsync(new ImageGenerationOptions(createImageContext.ImagePrompt));
             Stream stream = await new HttpClient().GetStreamAsync(response.Value.Data[0].Url);
-            var blobPath = $"{createImageContext.Timestamp}/image.png";
+            var blobPath = $"{createImageContext.StoragePath}/image.png";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
 
             // Store the prompt in the blob metadata.

@@ -27,7 +27,7 @@
 
             // Creating a unique output folder in case of activity retries.
             var uniqueId = Guid.NewGuid().ToString();
-            var baseDir = $"../{createVideoContext.Timestamp}_{uniqueId}";
+            var baseDir = $"../{uniqueId}";
             var audioPath = $"../{baseDir}/{AudioFileName}";
             var imagePath = $"../{baseDir}/{ImageFileName}";
             var outputPath = $"../{baseDir}/{OutputFileName}";
@@ -68,7 +68,7 @@
                     .AddParameter("-b:a 192k", ParameterPosition.PostInput)
                     .Start();
 
-                var blobPath = $"{createVideoContext.Timestamp}/output.mp4";
+                var blobPath = $"{createVideoContext.StoragePath}/output.mp4";
                 var outputBlobClient = this.blobContainerClient.GetBlobClient(blobPath);
                 await using FileStream fileStream = File.OpenRead(outputPath);
                 await outputBlobClient.UploadAsync(fileStream);

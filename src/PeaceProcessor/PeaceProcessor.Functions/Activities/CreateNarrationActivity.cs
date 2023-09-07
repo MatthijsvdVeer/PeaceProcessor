@@ -49,7 +49,7 @@
             WaveFileWriter.WriteWavFileToStream(outputStream, stereo);
 
             // Upload to blob storage.
-            var blobPath = $"{createNarrationContext.Timestamp}/narration.wav";
+            var blobPath = $"{createNarrationContext.StoragePath}/narration.wav";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
             outputStream.Position = 0;
             await blobClient.UploadAsync(outputStream, true);
