@@ -16,9 +16,9 @@ flowchart TD
     generate-metadata[Generate Video Description]:::AI
 
 
+    get-topic-->create-image-prompt-->generate-picture-->generate-video    
     get-topic-->create-prompt-->create-script-->tts-->generate-video-->upload-video
-    create-script-->generate-metadata-->upload-video    
-    get-topic-->create-image-prompt-->generate-picture-->generate-video
+    create-script-->generate-metadata-->upload-video
     
     classDef AI fill:#f96
 ```
