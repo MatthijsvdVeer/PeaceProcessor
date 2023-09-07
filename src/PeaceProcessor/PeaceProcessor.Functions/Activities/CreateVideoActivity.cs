@@ -68,7 +68,7 @@
                     .AddParameter("-b:a 192k", ParameterPosition.PostInput)
                     .Start();
 
-                var blobPath = $"{baseDir}/output.mp4";
+                var blobPath = $"{createVideoContext.Timestamp}/output.mp4";
                 var outputBlobClient = this.blobContainerClient.GetBlobClient(blobPath);
                 await using FileStream fileStream = File.OpenRead(outputPath);
                 await outputBlobClient.UploadAsync(fileStream);
