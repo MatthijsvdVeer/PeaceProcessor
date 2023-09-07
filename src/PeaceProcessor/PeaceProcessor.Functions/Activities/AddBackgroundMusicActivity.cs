@@ -51,7 +51,7 @@
             WaveFileWriter.WriteWavFileToStream(outStream, sampleProvider.ToWaveProvider());
             outStream.Position = 0;
 
-            var blobPath = $"{addBackgroundContext.Timestamp}/complete.wav";
+            var blobPath = $"{addBackgroundContext.StoragePath}/complete.wav";
             var completeBlob = this.blobContainerClient.GetBlobClient(blobPath);
             await completeBlob.UploadAsync(outStream, true);
             return blobPath;
