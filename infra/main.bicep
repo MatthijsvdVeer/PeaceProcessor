@@ -19,7 +19,7 @@ module appInsights 'modules/application-insights.bicep' = {
   }
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: 'sa${applicationName}'
   location: location
   identity: {
@@ -51,7 +51,7 @@ resource storageaccountDiag 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
   }
 }
 
-resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01' = {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
   parent: storageAccount
   name: 'default'
   properties: {
@@ -61,7 +61,7 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01'
   }
 }
 
-resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = {
+resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
   parent: blobService
   name: 'meditation'
   properties: {
@@ -72,12 +72,20 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
   }
 }
 
-resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
+module lifecyclePolicy 'modules/lifecyclePolicy.bicep' = {
+  name: 'lifecyclePolicy'
+  params: {
+    storageAccountName: storageAccount.name
+    containerName: blobContainer.name
+  }
+}
+
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2023-01-01' = {
   parent: storageAccount
   name: 'default'
 }
 
-resource queue 'Microsoft.Storage/storageAccounts/queueServices/queues@2022-09-01' = {
+resource queue 'Microsoft.Storage/storageAccounts/queueServices/queues@2023-01-01' = {
   parent: queueService
   name: 'topics'
 }
