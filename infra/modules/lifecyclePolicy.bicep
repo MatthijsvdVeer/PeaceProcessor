@@ -6,7 +6,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing 
 }
 
 // Add lifecycle policy to move blobs to cool tier after 7 days
-resource lifecyclePolicy 'Microsoft.Storage/storageAccounts/managementPolicies@2023-01-01' = {
+resource lifecyclePolicy 'Microsoft.Storage/storageAccounts/managementPolicies@2022-09-01' = {
   parent: storageAccount
   name: 'lifecyclePolicy'
   properties: {
