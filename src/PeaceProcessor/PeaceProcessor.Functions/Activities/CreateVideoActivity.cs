@@ -23,7 +23,7 @@
         public async Task<string> Run([ActivityTrigger] CreateVideoContext createVideoContext,
             FunctionContext executionContext)
         {
-            ILogger logger = executionContext.GetLogger(nameof(CreateVideoActivity)); 
+            ILogger logger = executionContext.GetLogger(nameof(CreateVideoActivity));
 
             // Creating a unique output folder in case of activity retries.
             var uniqueId = Guid.NewGuid().ToString();
@@ -58,15 +58,25 @@
                 var imageMediaInfo = await FFmpeg.GetMediaInfo(imagePath);
                 var videoStream = imageMediaInfo.VideoStreams.FirstOrDefault();
 
-                _ = await FFmpeg.Conversions.New()
-                    .AddStream(videoStream)
-                    .AddStream(audioStream)
-                    .SetOutput(outputPath)
-                    .AddParameter("-loop 1", ParameterPosition.PreInput)
-                    .AddParameter("-tune stillimage", ParameterPosition.PostInput)
-                    .AddParameter("-shortest", ParameterPosition.PostInput)
-                    .AddParameter("-b:a 192k", ParameterPosition.PostInput)
-                    .Start();
+                logger.LogInformation("Start FFmpeg for {output}", outputPath);
+                try
+                {
+                    _ = await FFmpeg.Conversions.New()
+                        .AddStream(videoStream)
+                        .AddStream(audioStream)
+                        .SetOutput(outputPath)
+                        .AddParameter("-loop 1", ParameterPosition.PreInput)
+                        .AddParameter("-tune stillimage", ParameterPosition.PostInput)
+                        .AddParameter("-shortest", ParameterPosition.PostInput)
+                        .AddParameter("-b:a 192k", ParameterPosition.PostInput)
+                        .Start();
+                    logger.LogInformation("Finished FFmpeg for {output}", outputPath);
+                }
+                catch (Exception exception)
+                {
+                    logger.LogError(exception, "Error during FFmpeg.");
+                    throw;
+                }
 
                 var blobPath = $"{createVideoContext.StoragePath}/output.mp4";
                 var outputBlobClient = this.blobContainerClient.GetBlobClient(blobPath);

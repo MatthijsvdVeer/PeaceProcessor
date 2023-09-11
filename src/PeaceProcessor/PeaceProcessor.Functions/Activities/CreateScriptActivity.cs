@@ -18,6 +18,8 @@
         private readonly float temperature;
         private readonly int maxTokens;
 
+        private static readonly string[] voices = { "en-US-JennyNeural", "en-US-JasonNeural", "en-GB-SoniaNeural" };
+
         public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory, IConfiguration configuration)
         {
             this.blobContainerClient = blobContainerClient;
@@ -54,9 +56,13 @@
             ChatCompletions completions = responseWithoutStream.Value;
             var rawScript = completions.Choices[0].Message.Content;
 
+            // Select a random voice for the script.
+            var ssml = await File.ReadAllTextAsync("empty.xml");
+            var voice = voices[new Random().Next(0, voices.Length)];
+            ssml = ssml.Replace("{{VOICE}}", voice);
+
             // Replace '<BREAK10>' with '<break time="10s"/>'. The number should remain the same
             var script = rawScript.Replace("<BREAK", "<break time=\"").Replace(">", "s\"/>");
-            var ssml = await File.ReadAllTextAsync("empty.xml");
             ssml = ssml.Replace("{{SCRIPT}}", script);
 
             var blobPath = $"{createScriptContext.StoragePath}/script.xml";
