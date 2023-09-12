@@ -6,7 +6,6 @@
     using Azure.AI.OpenAI;
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
-    using System.Text;
 
     internal sealed class CreateImageActivity
     {
