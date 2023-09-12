@@ -18,7 +18,7 @@
         private readonly float temperature;
         private readonly int maxTokens;
 
-        private static readonly string[] voices = { "en-US-JennyNeural", "en-US-JasonNeural", "en-GB-SoniaNeural" };
+        private static readonly string[] voices = { "en-US-JennyNeural", "en-US-JasonNeural", "en-US-JaneNeural", "en-US-AriaNeural", "en-US-TonyNeural", "en-US-GuyNeural" };
 
         public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory, IConfiguration configuration)
         {

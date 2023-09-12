@@ -12,7 +12,6 @@
     {
         private readonly BlobContainerClient blobContainerClient;
         private readonly string key;
-
         private readonly string region;
 
         public CreateNarrationActivity(IOptions<SpeechConfiguration> config, BlobContainerClient blobContainerClient)
