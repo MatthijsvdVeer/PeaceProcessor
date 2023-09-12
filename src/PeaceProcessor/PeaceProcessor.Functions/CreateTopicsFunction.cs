@@ -37,7 +37,7 @@ namespace PeaceProcessor.Functions
                         new ChatMessage(ChatRole.System, prompt)
                     },
                     Temperature = (float)0.7,
-                    MaxTokens = 2000,
+                    MaxTokens = 4000,
                     NucleusSamplingFactor = (float)0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0,
@@ -53,7 +53,8 @@ namespace PeaceProcessor.Functions
             foreach (var line in lines)
             {
                 logger.LogInformation("Sending topic: {topic}", line);
-                await this.queueClient.SendMessageAsync(line, timeToLive: TimeSpan.MaxValue);
+                // Add line to queue without expiration
+                await this.queueClient.SendMessageAsync(line);
             }
             return req.CreateResponse(HttpStatusCode.OK);
         }
