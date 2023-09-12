@@ -40,9 +40,15 @@
             var outFormat = new WaveFormat(SampleRate, mp3FileReader.WaveFormat.Channels);
             using var resampler = new MediaFoundationResampler(mp3FileReader, outFormat);
 
+            // Lower the volume of the background music.
+            var volumeProvider = new VolumeSampleProvider(resampler.ToSampleProvider())
+            {
+                Volume = 0.7f // Reduce the volume to 50%
+            };
+
             // Mix the two audio streams together.
             var mixer = new MixingSampleProvider(
-                new[] {waveFileReader.ToSampleProvider(), resampler.ToSampleProvider()});
+                new[] { waveFileReader.ToSampleProvider(), volumeProvider });
             TimeSpan takeDuration = waveFileReader.TotalTime.Add(TimeSpan.FromSeconds(SecondsPauseAfterNarration));
             var sampleProvider = mixer.Take(takeDuration);
 
