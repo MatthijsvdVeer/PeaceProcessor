@@ -71,7 +71,8 @@
             // Store the topic in the blob metadata.
             Dictionary<string, string> metadata = new()
             {
-                { "topic", StringUtility.FormatForTopicMetadata(createScriptContext.Topic) }
+                { "topic", StringUtility.FormatForMetadata(createScriptContext.Topic) },
+                { "voice", StringUtility.FormatForMetadata(voice) }
             };
 
             var blobUploadOptions = new BlobUploadOptions
