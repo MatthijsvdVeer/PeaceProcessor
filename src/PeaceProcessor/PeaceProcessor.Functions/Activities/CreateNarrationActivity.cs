@@ -7,6 +7,9 @@
     using Microsoft.CognitiveServices.Speech;
     using NAudio.Wave;
     using Azure.Storage.Blobs;
+    using Azure.AI.OpenAI;
+    using Azure.Storage.Blobs.Models;
+    using System.Text;
 
     internal sealed class CreateNarrationActivity
     {
@@ -51,7 +54,19 @@
             var blobPath = $"{createNarrationContext.StoragePath}/narration.wav";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
             outputStream.Position = 0;
-            await blobClient.UploadAsync(outputStream, true);
+
+            // Create metadata for the blob.
+            Dictionary<string, string> metadata = new()
+            {
+                { "duration", StringUtility.FormatForMetadata(result.AudioDuration.ToString()) }
+            };
+
+            var blobUploadOptions = new BlobUploadOptions
+            {
+                Metadata = metadata
+            };
+
+            await blobClient.UploadAsync(outputStream, blobUploadOptions);
             
             return blobPath;
         }

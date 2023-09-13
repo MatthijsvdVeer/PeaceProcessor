@@ -68,10 +68,12 @@
             var blobPath = $"{createScriptContext.StoragePath}/script.xml";
             var blobClient = this.blobContainerClient.GetBlobClient(blobPath);
 
-            // Store the topic in the blob metadata.
+            // Create metadata for the blob.
             Dictionary<string, string> metadata = new()
             {
-                { "topic", StringUtility.FormatForTopicMetadata(createScriptContext.Topic) }
+                { "topic", StringUtility.FormatForMetadata(createScriptContext.Topic) },
+                { "voice", StringUtility.FormatForMetadata(voice) },
+                { "totalTokens", completions.Usage.TotalTokens.ToString() }
             };
 
             var blobUploadOptions = new BlobUploadOptions

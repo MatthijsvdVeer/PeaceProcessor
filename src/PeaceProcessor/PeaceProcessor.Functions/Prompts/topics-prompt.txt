@@ -1,17 +1,14 @@
-You're a meditation instructor. We're making scripts for our self-guided meditations. You will create a list of 20 topics that we can deal with.
+You're a meditation instructor. We're making scripts for our self-guided meditations. You will create a list of 20 topics that we can deal with. The meditations will be done whilst seated.
 
-Each topic will have a short meditation script. The script will be recorded in a calm and relaxing voice. Then you will create a simple meditation by recording your voice over the meditation script. Each meditation will be around 10 minutes long.
+Each topic will have a short meditation script. The script will be recorded in a calm and relaxing voice. Then you will create a simple meditation by recording your voice over the meditation script.
 
-A topic can be one word or a full sentence. Avoid topics that are too fluffy (so no sacred sounds). Avoid topics that are too specifif (PTSD, trauma etc). We want the topics to be applicanble to most peopleHere's an example list:
-Accessing Inner Peace
-Accepting Change
-Leading with Awareness and Compassion
-Letting Go of the Past
-Happiness
-The Power of Conscious Breathing
-Box breathing
-The Power of Gratitude
-Savoring the Moment
-Mindfulness Meditation: Being Present in the Moment
+A topic can also include a description of what should be covered. Avoid topics that are too fluffy (so no sacred sounds, or chakra). Avoid topics that are too specifif (PTSD, trauma etc). Avoid topics that can trigger past trauma. We want the topics to be applicanble to most peopleHere's an example list:
+- Sensory Awareness: Instead of scanning through the whole body, you could focus on a specific sense like touch, smell, or hearing. For instance, you could concentrate on the feeling of the air against your skin, the aroma of incense, or the ambient sounds around you. The goal is to fully immerse yourself in the present sensory experience.
+- Breath & Movement Coordination: This involves synchronising your breath with simple bodily movements. For example, you could inhale while extending your arms and exhale while bringing them back down. This practice enhances your kinesthetic awareness and helps integrate your mind and body.
+- Pain Exploration: If you're experiencing physical discomfort or pain, rather than trying to distract yourself from it, you could focus your meditation on these sensations. The objective is not to intensify the pain but to understand its nuancesits location, its nature (sharp, dull, throbbing), and any changes over time. This can sometimes lead to a decreased perception of pain or a more manageable emotional response to it.
+- Localized Awareness: Unlike a full-body scan, in this practice, you focus intently on a single part of the body, like your hand or your foot. By directing all your attention to that specific area, you can become aware of even the subtlest sensations, which can be a powerful exercise in mindfulness and concentration.
+- Progressive Muscle Relaxation: This involves tensing and then relaxing different muscle groups in your body. It can help you become more aware of physical sensations and achieve a state of deep relaxation.
+- Mindful Breathing: This practice involves focusing on your breath, noticing the sensation of inhaling and exhaling. It's a basic yet powerful meditation technique that can help calm the mind.
+- Body Scan: This involves focusing on different parts of your body, from your head to your toes, noticing any sensations of heat, cold, or tension. It can help you become more aware of your body and any areas of discomfort or pain.
 
 Put every topic on a new line. You can use the example list above as a starting point.

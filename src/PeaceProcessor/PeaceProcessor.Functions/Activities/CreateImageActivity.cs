@@ -33,7 +33,7 @@
             // Store the prompt in the blob metadata.
             Dictionary<string, string> metadata = new()
             {
-                { "prompt", StringUtility.FormatForTopicMetadata(createImageContext.ImagePrompt) }
+                { "prompt", StringUtility.FormatForMetadata(createImageContext.ImagePrompt) }
             };
 
             var blobUploadOptions = new BlobUploadOptions
