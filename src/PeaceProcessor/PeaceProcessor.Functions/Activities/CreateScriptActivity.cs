@@ -17,8 +17,7 @@
         private readonly string model;
         private readonly float temperature;
         private readonly int maxTokens;
-
-        private static readonly string[] voices = { "en-US-JennyNeural", "en-US-JasonNeural", "en-US-JaneNeural", "en-US-AriaNeural", "en-US-TonyNeural", "en-US-GuyNeural" };
+        private readonly string[] voices;
 
         public CreateScriptActivity(BlobContainerClient blobContainerClient, OpenAiClientFactory openAiClientFactory, IConfiguration configuration)
         {
@@ -27,6 +26,7 @@
             this.model = configuration["model"];
             this.temperature = float.Parse(configuration["temperature"]);
             this.maxTokens = int.Parse(configuration["max_tokens"]);
+            this.voices = configuration["voices"].Split(',').ToArray();
         }
 
         [Function(nameof(CreateScriptActivity))]
