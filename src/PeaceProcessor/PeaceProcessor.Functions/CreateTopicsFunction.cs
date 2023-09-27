@@ -53,8 +53,9 @@ namespace PeaceProcessor.Functions
             foreach (var line in lines)
             {
                 logger.LogInformation("Sending topic: {topic}", line);
+
                 // Add line to queue without expiration
-                await this.queueClient.SendMessageAsync(line);
+                await this.queueClient.SendMessageAsync(line, timeToLive: TimeSpan.MaxValue);
             }
             return req.CreateResponse(HttpStatusCode.OK);
         }
