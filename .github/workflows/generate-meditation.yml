@@ -13,3 +13,10 @@ jobs:
             - name: Read the issue
               id: read-issue
               run: echo "The issue is ${{ github.event.issue.title }}"
+            - name: "Body of the issue"
+              id: body
+              run: echo "The body of the issue is ${{ github.event.issue.body }}"
+            - name: View the github context
+              run: echo "$GITHUB_CONTEXT"
+              env:
+                GITHUB_CONTEXT: ${{ toJson(github) }}
