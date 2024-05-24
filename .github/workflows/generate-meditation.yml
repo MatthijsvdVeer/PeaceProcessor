@@ -1,0 +1,15 @@
+# do this when a new issue is created
+on:
+  issues:
+    types: [opened]
+
+jobs:
+    hello-world:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Hello world action step
+              id: hello
+              run: echo "Hello world!"
+            - name: Read the issue
+              id: read-issue
+              run: echo "The issue is ${{ github.event.issue.title }}"
