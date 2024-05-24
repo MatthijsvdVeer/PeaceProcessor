@@ -10,6 +10,5 @@ body:
       label: Topic
       description: What is the topic of the meditation?
       placeholder: "Gratitude: The Key to Happiness"
-      value: "A bug happened!"
     validations:
       required: true
