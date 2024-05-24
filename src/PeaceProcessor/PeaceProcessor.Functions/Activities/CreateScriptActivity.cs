@@ -38,19 +38,19 @@
 
             var prompt = await File.ReadAllTextAsync("Prompts/script-prompt.txt");
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
-                this.model,
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt),
-                        new ChatMessage(ChatRole.User, createScriptContext.Topic)
+                        new ChatRequestSystemMessage(prompt),
+                        new ChatRequestUserMessage(createScriptContext.Topic)
                     },
                     Temperature = this.temperature,
                     MaxTokens = this.maxTokens,
                     NucleusSamplingFactor = (float) 0.95,
                     FrequencyPenalty = 0,
-                    PresencePenalty = 0
+                    PresencePenalty = 0,
+                    DeploymentName = this.model
                 });
 
             ChatCompletions completions = responseWithoutStream.Value;

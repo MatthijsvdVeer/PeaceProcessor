@@ -22,34 +22,35 @@ namespace PeaceProcessor.Functions
 
         [Function("CreateTopicsFunction")]
         public async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Function, "post")]
+            HttpRequestData req,
             [DurableClient] DurableTaskClient client,
             FunctionContext executionContext)
         {
             ILogger logger = executionContext.GetLogger(nameof(CreateMeditationFunction));
             var prompt = await File.ReadAllTextAsync("./Prompts/topics-prompt.txt");
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
-                "gpt-4",
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt)
+                        new ChatRequestSystemMessage(prompt)
                     },
                     Temperature = (float)0.7,
                     MaxTokens = 4000,
                     NucleusSamplingFactor = (float)0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0,
+                    DeploymentName = "gpt-4",
                 });
 
             var completions = responseWithoutStream.Value;
             var responseContent = completions.Choices[0].Message.Content;
             // split the text on newlines  
             var lines = responseContent.Split(
-                               new[] { "\r\n", "\r", "\n" },
-                                              StringSplitOptions.None
-                                          );
+                new[] { "\r\n", "\r", "\n" },
+                StringSplitOptions.None
+            );
             foreach (var line in lines)
             {
                 logger.LogInformation("Sending topic: {topic}", line);
@@ -57,6 +58,7 @@ namespace PeaceProcessor.Functions
                 // Add line to queue without expiration
                 await this.queueClient.SendMessageAsync(line, timeToLive: TimeSpan.MaxValue);
             }
+
             return req.CreateResponse(HttpStatusCode.OK);
         }
     }

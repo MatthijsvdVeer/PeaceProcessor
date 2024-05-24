@@ -24,19 +24,19 @@
             var prompt = await File.ReadAllTextAsync("Prompts/image-prompt.txt");
 
             Response<ChatCompletions> responseWithoutStream = await this.openAiClient.GetChatCompletionsAsync(
-                "gpt-4",
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt),
-                        new ChatMessage(ChatRole.User, createScriptContext.Topic)
+                        new ChatRequestSystemMessage(prompt),
+                        new ChatRequestUserMessage(createScriptContext.Topic)
                     },
                     Temperature = (float)0.7,
                     MaxTokens = 2000,
                     NucleusSamplingFactor = (float)0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0,
+                    DeploymentName = "gpt-4"
                 });
 
             ChatCompletions completions = responseWithoutStream.Value;

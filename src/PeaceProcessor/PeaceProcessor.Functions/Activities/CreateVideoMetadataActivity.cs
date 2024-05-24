@@ -38,13 +38,12 @@
             var prompt = await File.ReadAllTextAsync(promptPath);
 
             Response<ChatCompletions> response = await this.openAiClient.GetChatCompletionsAsync(
-                "gpt-35-turbo",
                 new ChatCompletionsOptions
                 {
                     Messages =
                     {
-                        new ChatMessage(ChatRole.System, prompt),
-                        new ChatMessage(ChatRole.User,
+                        new ChatRequestSystemMessage(prompt),
+                        new ChatRequestUserMessage(
                             $"The topic is '{createVideoMetadataContext.Topic}'. Here's the script: '{script}'")
                     },
                     Temperature = (float) 0.4,
@@ -52,6 +51,7 @@
                     NucleusSamplingFactor = (float) 0.95,
                     FrequencyPenalty = 0,
                     PresencePenalty = 0,
+                    DeploymentName = "gpt-35-turbo"
                 });
 
             return response.Value.Choices[0].Message.Content;
