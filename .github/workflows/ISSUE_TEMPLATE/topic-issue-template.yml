@@ -1,0 +1,15 @@
+name: Generate a meditation
+description: Create me to start a new meditation generation process
+title: "[Meditation]: "
+assignees:
+  - MatthijsvdVeer
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Topic
+      description: What is the topic of the meditation?
+      placeholder: "Gratitude: The Key to Happiness"
+      value: "A bug happened!"
+    validations:
+      required: true
