@@ -2,6 +2,12 @@
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
+    inputs:
+      meditation:
+        description: 'Generate a meditation'
+        required: true
+        default: 'true'
 
 jobs:
   hello-world:
