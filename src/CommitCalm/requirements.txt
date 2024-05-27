@@ -1,3 +1,4 @@
 langchain
 langchain_prompty
 promptflow
+azure.identity
