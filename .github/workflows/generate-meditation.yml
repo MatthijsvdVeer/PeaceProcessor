@@ -10,40 +10,27 @@ on:
         default: 'true'
 
 jobs:
-  hello-world:
-      runs-on: ubuntu-latest
-      steps:
-          - name: Hello world action step
-            id: hello
-            run: echo "Hello world!"
-          - name: Read the issue
-            id: read-issue
-            run: echo "The issue is ${{ github.event.issue.title }}"
-          - name: "Body of the issue"
-            id: body
-            run: echo "The body of the issue is ${{ github.event.issue.body }}"
-          - name: View the github context
-            run: echo "$GITHUB_CONTEXT"
-            env:
-              GITHUB_CONTEXT: ${{ toJson(github) }}
   generate-meditation:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
-      # This is the version of the action for setting up Python, not the Python version.
       uses: actions/setup-python@v5
       with:
-        # Semantic version range syntax or exact version of a Python version
         python-version: '3.x'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r src/CommitCalm/requirements.txt
-    #TODO: Replace with OIDC
+    # TODO: Replace with OIDC
     - name: Azure login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.COMMITCALM_AZURE_CREDENTIALS }}
     - name: Run the meditation script
-      run: python src/CommitCalm/basic_promptflow.py
+      run: python src/CommitCalm/basic_promptflow.py --topic ${{ github.event.issue.body }}" > meditation.txt
+    - name: Publish the meditation
+      uses: actions/upload-artifact@v2
+      with:
+        name: meditation
+        path: meditation.txt

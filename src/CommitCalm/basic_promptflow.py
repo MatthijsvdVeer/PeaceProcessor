@@ -1,4 +1,5 @@
 import json
+import argparse
 
 from pathlib import Path
 folder = Path(__file__).parent.absolute().as_posix()
@@ -23,10 +24,9 @@ def flow_entry(
   return result
 
 if __name__ == "__main__":
-   json_input = '''{
-  "topic": "Gratitude"
-}'''
-   args = json.loads(json_input)
+   parser = argparse.ArgumentParser()
+   parser.add_argument("--topic", default="Gratitude", help="Topic for the flow")
+   args = parser.parse_args()
 
-   result = flow_entry(**args)
+   result = flow_entry(topic=args.topic)
    print(result)
