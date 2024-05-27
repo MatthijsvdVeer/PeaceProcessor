@@ -28,7 +28,7 @@ jobs:
       with:
         creds: ${{ secrets.COMMITCALM_AZURE_CREDENTIALS }}
     - name: Run the meditation script
-      run: python src/CommitCalm/basic_promptflow.py --topic ${{ github.event.issue.body }}" > meditation.txt
+      run: python src/CommitCalm/basic_promptflow.py --topic "${{ github.event.issue.body }}" > meditation.txt
     - name: Publish the meditation
       uses: actions/upload-artifact@v2
       with:
