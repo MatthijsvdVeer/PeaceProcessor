@@ -40,5 +40,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r src/CommitCalm/requirements.txt
+    #TODO: Replace with OIDC
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.COMMITCALM_AZURE_CREDENTIALS }}
     - name: Run the meditation script
       run: python src/CommitCalm/basic_promptflow.py
