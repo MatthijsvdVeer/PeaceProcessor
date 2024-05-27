@@ -41,4 +41,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run the meditation script
-      run: python src/CommitCalm/basic_langchain.py
+      run: python src/CommitCalm/basic_promptflow.py

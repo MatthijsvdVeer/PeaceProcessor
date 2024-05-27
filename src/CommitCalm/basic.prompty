@@ -3,7 +3,6 @@ name: CreateScript
 description: A prompt to generate a self-guided meditation.
 authors:
   - Matthijs van der Veer
-template: mustache
 model:
   api: chat
   configuration:
